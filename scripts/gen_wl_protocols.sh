@@ -16,6 +16,9 @@ then
 	mkdir $OUTPUT_DIR
 	wayland-scanner client-header "$PROTOCOL_ROOT/stable/xdg-shell/xdg-shell.xml" "$OUTPUT_DIR/wayland_xdg_shell.h"
 	wayland-scanner private-code  "$PROTOCOL_ROOT/stable/xdg-shell/xdg-shell.xml" "$OUTPUT_DIR/wayland_xdg_shell.c"
+	wayland-scanner client-header "$PROTOCOL_ROOT/stable/linux-dmabuf/linux-dmabuf-v1.xml" "$OUTPUT_DIR/wayland_linux_dmabuf.h"
+	wayland-scanner private-code  "$PROTOCOL_ROOT/stable/linux-dmabuf/linux-dmabuf-v1.xml" "$OUTPUT_DIR/wayland_linux_dmabuf.c"
 fi
 
 echo "$OUTPUT_DIR/wayland_xdg_shell.c"
+echo "$OUTPUT_DIR/wayland_linux_dmabuf.c"
