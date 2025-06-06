@@ -1,4 +1,4 @@
-#include <render/lv_demo_render.h>
+#include <demos/render/lv_demo_render.h>
 
 typedef struct
 {
@@ -16,11 +16,11 @@ void test_render(lv_display_t * display, const color_format_t * format)
         uint32_t i;
         for(i = 0; i < LV_DEMO_RENDER_SCENE_NUM; i++) {
             const char * scene_name = lv_demo_render_get_scene_name(i);
-            LV_LOG_USER("Scene %s", scene_name);
-            lv_demo_render(i, opa_values[opa]);
             char buf[128];
             lv_snprintf(buf, sizeof(buf), "draw/render/%s/demo_render_%s_opa_%d.png", format->name, scene_name,
                         opa_values[opa]);
+            LV_LOG_USER("Rendering %s", buf);
+            lv_demo_render(i, opa_values[opa]);
             lv_test_screenshot_compare(buf);
         }
     }
