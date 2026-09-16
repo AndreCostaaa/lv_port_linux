@@ -21,6 +21,7 @@
 #include "lib/driver_backends.h"
 #include "lib/simulator_util.h"
 #include "lib/simulator_settings.h"
+#include "lib/blog_demos.h"
 
 /* Internal functions */
 static void configure_simulator(int argc, char ** argv);
@@ -175,6 +176,8 @@ int main(int argc, char ** argv)
     }
 #endif
 
+    if(!blog_demo_run(getenv("DEMO"))) {
+
 #ifdef CONFIG_LV_USE_DEMO_TRUCK
     const char * assets_path = getenv("LV_LINUX_3D_PATH");
     if(!assets_path) {
@@ -196,6 +199,8 @@ int main(int argc, char ** argv)
     lv_label_set_text_static(label, "Demos not enabled, create your own ui in `src/main.c`");
     lv_obj_center(label);
 #endif /*LV_BUILD_DEMOS*/
+
+    }
 
     while(1) {
         uint32_t ms = lv_timer_handler();
