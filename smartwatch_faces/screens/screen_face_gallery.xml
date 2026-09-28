@@ -1,0 +1,46 @@
+<!-- FACE GALLERY: all 18 faces in a scrolling 3-column grid; about nine
+     are on screen at once. Each tile is a live face (snapshot mode: one
+     snapshot per tile). Swipe up on the
+     picker to get here, swipe right to go back, tap a face to wear it. -->
+<screen permanent="true">
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<container
+			name="face_grid"
+			width="100%"
+			height="100%"
+			flow="row_wrap"
+			pad="0"
+			gap="12"
+			scrollbar_mode="off"
+			style_pad_top="40"
+			style_pad_bottom="90"
+			style_pad_hor="30"
+			style_flex_main_place="center"
+		>
+			<lv_label text="All faces" width="100%" style_text_align="center" style_pad_bottom="4">
+				<style name="style_caption" />
+			</lv_label>
+			<gallery_tile_classic name="tile_0" />
+			<gallery_tile_activity name="tile_1" />
+			<gallery_tile_sport name="tile_2" />
+			<gallery_tile_minimal name="tile_3" />
+			<gallery_tile_info name="tile_4" />
+			<gallery_tile_chrono name="tile_5" />
+			<gallery_tile_pilot name="tile_6" />
+			<gallery_tile_diver name="tile_7" />
+			<gallery_tile_gmt name="tile_8" />
+			<gallery_tile_moon name="tile_9" />
+			<gallery_tile_numerals name="tile_10" />
+			<gallery_tile_modular name="tile_11" />
+			<gallery_tile_lcd name="tile_12" />
+			<gallery_tile_radar name="tile_13" />
+			<gallery_tile_gradient name="tile_14" />
+			<gallery_tile_solar name="tile_15" />
+			<gallery_tile_bauhaus name="tile_16" />
+			<gallery_tile_skeleton name="tile_17" />
+		</container>
+	</view>
+</screen>

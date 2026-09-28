@@ -292,7 +292,8 @@
 			text_font="font_watch_body"
 		/>
 
-		<!-- Root of every watch face: the full round dial -->
+		<!-- Root of every watch face: the full round dial. It sets its own text
+		     color and font so a face looks right on any parent. -->
 		<style
 			name="style_face"
 			width="#watch_size"
@@ -300,6 +301,8 @@
 			radius="#radius_round"
 			bg_color="#color_bg"
 			bg_opa="100%"
+			text_color="#color_text"
+			text_font="font_watch_body"
 		/>
 
 		<!-- Accent styles, swapped with <bind_style subject="subject_accent">.
@@ -374,8 +377,13 @@
 		<style name="style_mini_bar" height="6" radius="#radius_round" bg_color="#color_surface_hi" bg_opa="100%" />
 		<style name="style_mini_bar_ind" radius="#radius_round" bg_opa="100%" />
 
-		<!-- Round slot a live, scaled-down face sits in (picker, edit) -->
-		<style name="style_face_slot" width="260" height="260" radius="#radius_round" clip_corner="true" bg_color="#color_bg" bg_opa="100%" />
+		<!-- Round slot a live, scaled-down face sits in (picker). No background:
+		     the faces are opaque discs themselves. -->
+		<style name="style_face_slot" width="260" height="260" radius="#radius_round" clip_corner="true" />
+		<!-- Gallery tile: a smaller round slot -->
+		<style name="style_gallery_tile" width="124" height="124" radius="#radius_round" clip_corner="true" />
+		<!-- A full-size face scaled to 124 / 466 around its centre (fits a gallery tile) -->
+		<style name="style_face_gallery_thumb" transform_scale_x="68" transform_scale_y="68" transform_pivot_x="#watch_pivot" transform_pivot_y="#watch_pivot" />
 		<!-- A full-size face scaled to 260 / 466 around its centre (fits the slot) -->
 		<style name="style_face_thumb" transform_scale_x="143" transform_scale_y="143" transform_pivot_x="#watch_pivot" transform_pivot_y="#watch_pivot" />
 	</styles>
@@ -416,8 +424,8 @@
 		<int name="subject_temp" value="21" min_value="-40" max_value="60" help="Outside temperature in °C" />
 
 		<!-- Face selection and customization -->
-		<int name="subject_active_face" value="0" min_value="0" max_value="5" help="Face shown on the home screen" />
-		<int name="subject_edit_face" value="0" min_value="0" max_value="5" help="Face shown in the edit screen" />
+		<int name="subject_active_face" value="0" min_value="0" max_value="17" help="Face shown on the home screen" />
+		<int name="subject_edit_face" value="0" min_value="0" max_value="17" help="Face shown in the edit screen" />
 		<int name="subject_accent" value="0" min_value="0" max_value="4" help="Accent color index (see style_accent_N)" />
 		<int name="subject_show_seconds" value="1" min_value="0" max_value="1" help="Faces show a seconds hand / readout" />
 		<int name="subject_show_date" value="1" min_value="0" max_value="1" help="Faces show the date complication" />

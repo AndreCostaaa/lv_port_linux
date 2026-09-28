@@ -16,16 +16,17 @@
 #include <time.h>
 
 #define TICK_PERIOD_MS  200    /* poll the clock, act when the second changes */
-#define HANDS_MAX       64     /* per hand kind: 6 faces x 3 screens + margin */
+#define HANDS_MAX       160    /* per hand kind: 90 face instances (home, picker bg + cards, edit, gallery) */
 
 typedef enum {
     HAND_HOUR,
     HAND_MIN,
     HAND_SEC,
+    HAND_GMT,       /* 24-hour hand (face_gmt) */
     HAND_KIND_CNT
 } hand_kind_t;
 
-static const char * const hand_names[HAND_KIND_CNT] = {"hand_hour", "hand_min", "hand_sec"};
+static const char * const hand_names[HAND_KIND_CNT] = {"hand_hour", "hand_min", "hand_sec", "hand_gmt"};
 static lv_obj_t * hands[HAND_KIND_CNT][HANDS_MAX];
 static uint32_t hand_cnt[HAND_KIND_CNT];
 
@@ -56,6 +57,7 @@ static void rotate_hands(int h, int m, int s)
     angle[HAND_HOUR] = ((h % 12) * 60 + m) * 5 + s / 12;
     angle[HAND_MIN] = m * 60 + s;
     angle[HAND_SEC] = s * 60;
+    angle[HAND_GMT] = (h * 60 + m) * 5 / 2;
 
     for(int k = 0; k < HAND_KIND_CNT; k++) {
         for(uint32_t i = 0; i < hand_cnt[k]; i++) {
@@ -153,7 +155,7 @@ static void tick_cb(lv_timer_t * timer)
 
 void watch_time_init(void)
 {
-    lv_obj_t * screens[] = {screen_home, screen_picker, screen_face_edit};
+    lv_obj_t * screens[] = {screen_home, screen_picker, screen_face_edit, screen_face_gallery};
     for(size_t i = 0; i < sizeof(screens) / sizeof(screens[0]); i++) {
         if(screens[i]) collect_hands(screens[i]);
     }

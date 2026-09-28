@@ -86,14 +86,21 @@ void watch_on_face_long_press(lv_event_t * e)
     watch_nav_open_picker();
 }
 
-/* launcher and apps: swipe right = back */
+/* screen_picker: swipe up = face gallery */
+void watch_on_picker_gesture(lv_event_t * e)
+{
+    LV_UNUSED(e);
+    if(gesture_dir() == LV_DIR_TOP) watch_nav_open_gallery();
+}
+
+/* launcher, apps, gallery: swipe right = back */
 void watch_on_back_gesture(lv_event_t * e)
 {
     LV_UNUSED(e);
     if(gesture_dir() == LV_DIR_RIGHT) watch_nav_back();
 }
 
-/* face_card_*: tap on face_slot, user_data = face index */
+/* face_card_* (tap on face_slot) and gallery tiles, user_data = face index */
 void watch_on_face_select(lv_event_t * e)
 {
     watch_nav_select_face(user_data_int(e));

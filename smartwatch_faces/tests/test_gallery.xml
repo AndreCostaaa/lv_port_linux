@@ -1,0 +1,7 @@
+<!-- Face gallery: 18 live tiles, about nine on screen -->
+<test>
+	<view extends="screen_face_gallery" />
+	<steps>
+		<screenshot_compare path="screen_face_gallery.png" />
+	</steps>
+</test>

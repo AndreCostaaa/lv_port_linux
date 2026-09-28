@@ -1,0 +1,87 @@
+<component>
+	<!-- Dive watch: black ceramic bezel with a 60-minute scale, deep blue
+	     gradient dial, round lume indices and an orange seconds hand. -->
+	<consts>
+		<color name="lume" value="0xE9F5D2" help="Luminous paint" />
+		<color name="orange" value="0xFF7A1A" help="Diver orange" />
+	</consts>
+
+	<styles>
+		<style name="style_dial" bg_color="0x0C3159" bg_grad_color="0x03121F" bg_grad_dir="ver" border_width="36" border_color="0x0E0F11" />
+		<style name="style_bezel_main" arc_opa="0%" />
+		<style name="style_bezel_minor" length="6" line_width="2" line_color="0xFFFFFF" line_opa="60%" />
+		<style name="style_bezel_major" length="10" line_width="3" line_color="0xFFFFFF" text_font="font_watch_caption" text_color="0xFFFFFF" pad_radial="2" />
+		<style name="style_lume_index" radius="#radius_round" bg_color="#lume" bg_opa="100%" border_width="2" border_color="0xFFFFFF" />
+		<style name="style_date" bg_color="0xFFFFFF" bg_opa="100%" radius="4" text_color="0x111111" text_font="font_watch_caption" pad_hor="6" pad_ver="3" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+		<style name="style_dial" />
+
+		<!-- Bezel: minute scale, numerals every 10 -->
+		<lv_scale width="458" height="458" align="center" mode="round_inner" total_tick_count="60" major_tick_every="5" min_value="0" max_value="59" angle_range="354" rotation="270" label_show="true" text_src="  10  20  30  40  50 " clickable="false">
+			<style name="style_bezel_main" />
+			<style name="style_bezel_minor" selector="items" />
+			<style name="style_bezel_major" selector="indicator" />
+		</lv_scale>
+		<box width="16" height="16" align="top_mid" y="10" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+
+		<!-- Lume indices; triangle at 12, date at 3 -->
+		<box align="center" x="81" y="-140" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="140" y="-81" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="140" y="81" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="81" y="140" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="0" y="162" width="20" height="44" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="-81" y="140" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="-140" y="81" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="-162" y="0" width="44" height="20" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="-140" y="-81" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<box align="center" x="-81" y="-140" width="24" height="24" clickable="false">
+			<style name="style_lume_index" />
+		</box>
+		<lv_line points="(0 0) (40 0) (20 34) (0 0)" align="center" y="-168" style_line_width="6" style_line_color="#lume" style_line_rounded="true" />
+		<lv_label align="center" x="150" bind_text="subject_day" bind_text-fmt="%d" clickable="false">
+			<style name="style_date" />
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+		</lv_label>
+
+		<!-- Wordmark -->
+		<lv_label text="LVGL" align="center" y="-92" style_text_font="font_watch_title" style_text_letter_space="4" />
+		<lv_label text="DIVER 300M" align="center" y="-62" style_text_font="font_watch_caption" style_text_color="#orange" style_text_letter_space="2" />
+
+		<!-- Hands, posed at 10:09:30 -->
+		<hand name="hand_hour" w="18" h="130" pivot_x="9" pivot_y="110" offset="-45" angle="3047" style_bg_color="0xFFFFFF">
+			<box width="10" height="80" align="top_mid" y="8" clickable="false" style_radius="5" style_bg_color="#lume" style_bg_opa="100%" />
+		</hand>
+		<hand name="hand_min" w="12" h="190" pivot_x="6" pivot_y="168" offset="-73" angle="570" style_bg_color="0xFFFFFF">
+			<box width="6" height="130" align="top_mid" y="8" clickable="false" style_radius="3" style_bg_color="#lume" style_bg_opa="100%" />
+		</hand>
+		<hand name="hand_sec" w="4" h="226" pivot_x="2" pivot_y="186" offset="-73" angle="1800" style_bg_color="#orange">
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+		<box width="16" height="16" align="center" clickable="false" style_radius="#radius_round" style_bg_color="#orange" style_bg_opa="100%" />
+	</view>
+</component>

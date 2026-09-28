@@ -1,0 +1,66 @@
+<component>
+	<!-- Solar: the day as an arc over the horizon, with the sun riding on it
+	     (the arc's knob follows subject_hour), sunrise and sunset times and a
+	     digital clock. -->
+	<consts>
+		<color name="sun" value="0xFFC94D" help="Sun and daylight" />
+	</consts>
+
+	<styles>
+		<style name="style_dusk" bg_color="0x151A3A" bg_grad_color="0x2A1330" bg_grad_dir="ver" />
+		<style name="style_daylight" arc_width="6" arc_color="#sun" arc_opa="35%" pad_all="0" />
+		<style name="style_daylight_ind" arc_width="6" arc_color="#sun" arc_opa="100%" arc_rounded="true" />
+		<style name="style_sun" bg_color="#sun" bg_opa="100%" radius="#radius_round" pad_all="10" shadow_width="0" />
+		<style name="style_horizon" bg_color="0xFFFFFF" bg_opa="35%" />
+		<style name="style_digits" text_font="font_watch_digits_md" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+		<style name="style_dusk" />
+
+		<!-- Day arc, 06:00 on the left to 20:00 on the right -->
+		<lv_arc width="360" height="360" align="center" y="-10" clickable="false" bg_start_angle="180" bg_end_angle="0" rotation="0" min_value="6" max_value="20" bind_value="subject_hour">
+			<style name="style_daylight" />
+			<style name="style_daylight_ind" selector="indicator" />
+			<style name="style_sun" selector="knob" />
+		</lv_arc>
+		<box align="center" y="-10" width="400" height="2" clickable="false">
+			<style name="style_horizon" />
+		</box>
+
+		<!-- Sunrise / sunset -->
+		<column align="center" x="-150" y="22" horizontal_align="center" clickable="false">
+			<icon src="icon_sun_24" color="#sun" />
+			<lv_label text="06:42" style_text_font="font_watch_caption" />
+		</column>
+		<column align="center" x="150" y="22" horizontal_align="center" clickable="false">
+			<icon src="icon_moon_32" color="0xB9B6FF" />
+			<lv_label text="19:18" style_text_font="font_watch_caption" />
+		</column>
+
+		<!-- Time and date -->
+		<row align="center" y="82" vertical_align="center" clickable="false">
+			<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label text=":" style_text_color="#sun">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label bind_text="subject_minute" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+		</row>
+		<row align="center" y="150" gap="8" clickable="false">
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+			<lv_label bind_text="subject_weekday">
+				<style name="style_caption" />
+			</lv_label>
+			<lv_label bind_text="subject_day" bind_text-fmt="%d">
+				<style name="style_caption" />
+			</lv_label>
+		</row>
+	</view>
+</component>

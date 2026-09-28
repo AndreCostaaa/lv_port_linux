@@ -1,0 +1,82 @@
+<component>
+	<!-- Moonphase: midnight-blue dial, gold batons and hands, a moon window
+	     with stars and a date sub-dial. -->
+	<consts>
+		<color name="gold" value="0xD9B66C" help="Applied gold" />
+		<color name="night" value="0x061029" help="Moon window sky" />
+	</consts>
+
+	<styles>
+		<style name="style_dial" bg_color="0x14234D" bg_grad_color="0x060C20" bg_grad_dir="ver" />
+		<style name="style_track_main" arc_opa="0%" />
+		<style name="style_track_minor" length="6" line_width="1" line_color="#gold" line_opa="70%" />
+		<style name="style_track_major" length="24" line_width="5" line_color="#gold" />
+		<style name="style_window" width="120" height="120" radius="#radius_round" clip_corner="true" bg_color="#night" bg_opa="100%" border_width="3" border_color="#gold" />
+		<style name="style_star" radius="#radius_round" bg_color="0xFFF6D8" bg_opa="100%" />
+		<style name="style_moon" width="64" height="64" radius="#radius_round" bg_color="0xF3DFA6" bg_grad_color="0xC9A55C" bg_grad_dir="ver" bg_opa="100%" />
+		<style name="style_moon_shadow" width="64" height="64" radius="#radius_round" bg_color="#night" bg_opa="100%" />
+		<style name="style_subdial" width="92" height="92" radius="#radius_round" border_width="2" border_color="#gold" bg_color="0x0C1838" bg_opa="100%" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+		<style name="style_dial" />
+
+		<!-- Gold minute track and batons -->
+		<lv_scale width="430" height="430" align="center" mode="round_inner" total_tick_count="60" major_tick_every="5" min_value="0" max_value="59" angle_range="354" rotation="270" label_show="false" clickable="false">
+			<style name="style_track_main" />
+			<style name="style_track_minor" selector="items" />
+			<style name="style_track_major" selector="indicator" />
+		</lv_scale>
+
+		<!-- Date sub-dial -->
+		<column align="center" y="-92" horizontal_align="center" vertical_align="center" content_align="center" clickable="false">
+			<style name="style_subdial" />
+			<lv_label bind_text="subject_weekday" style_text_font="font_watch_caption" style_text_color="#gold" />
+			<lv_label bind_text="subject_day" bind_text-fmt="%d" style_text_font="font_watch_title" style_text_color="#gold" />
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+		</column>
+
+		<!-- Moon window: a waxing moon under the night sky -->
+		<box align="center" y="104" clickable="false">
+			<style name="style_window" />
+			<box align="center" x="-38" y="-18" width="3" height="3" clickable="false">
+				<style name="style_star" />
+			</box>
+			<box align="center" x="-20" y="14" width="2" height="2" clickable="false">
+				<style name="style_star" />
+			</box>
+			<box align="center" x="30" y="-22" width="2" height="2" clickable="false">
+				<style name="style_star" />
+			</box>
+			<box align="center" x="40" y="12" width="3" height="3" clickable="false">
+				<style name="style_star" />
+			</box>
+			<box align="center" x="-6" y="-30" width="2" height="2" clickable="false">
+				<style name="style_star" />
+			</box>
+			<box align="center" x="12" y="24" width="2" height="2" clickable="false">
+				<style name="style_star" />
+			</box>
+			<box align="center" x="8" clickable="false">
+				<style name="style_moon" />
+			</box>
+			<box align="center" x="-18" y="-6" clickable="false">
+				<style name="style_moon_shadow" />
+			</box>
+		</box>
+
+		<!-- Wordmark -->
+		<lv_label text="LVGL · PHASES DE LUNE" align="center" y="30" style_text_font="font_watch_caption" style_text_color="#gold" style_text_letter_space="1" />
+
+		<!-- Gold hands, posed at 10:09:30 -->
+		<hand name="hand_hour" w="12" h="130" pivot_x="6" pivot_y="112" offset="-47" angle="3047" style_bg_color="#gold" />
+		<hand name="hand_min" w="8" h="190" pivot_x="4" pivot_y="170" offset="-75" angle="570" style_bg_color="#gold" />
+		<hand name="hand_sec" w="2" h="216" pivot_x="1" pivot_y="182" offset="-74" angle="1800" style_bg_color="#gold">
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+		<box width="14" height="14" align="center" clickable="false" style_radius="#radius_round" style_bg_color="#gold" style_bg_opa="100%" />
+	</view>
+</component>

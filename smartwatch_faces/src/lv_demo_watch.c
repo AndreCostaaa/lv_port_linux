@@ -9,6 +9,7 @@
 #include "watch_time.h"
 #include "watch_bench.h"
 #include "watch_thumbs.h"
+#include "watch_depth.h"
 #include "watch_callbacks.h"
 
 #include <stdlib.h>
@@ -20,6 +21,7 @@ void lv_demo_watch(void)
     /* Every screen is created once and kept (permanent, never auto-deleted) */
     screen_home_create();
     screen_picker_create();
+    screen_face_gallery_create();
     screen_face_edit_create();
     screen_launcher_create();
     screen_app_heart_create();
@@ -34,6 +36,7 @@ void lv_demo_watch(void)
     }
     watch_time_init();
     watch_thumbs_init();
+    watch_depth_init();
     watch_nav_init();
 
     /* WATCH_BENCH=1: record the phase 1 performance baseline */

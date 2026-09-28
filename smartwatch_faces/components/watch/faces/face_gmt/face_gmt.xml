@@ -1,0 +1,63 @@
+<component>
+	<!-- GMT: two-tone 24-hour bezel (day blue, night red), a black dial with
+	     batons and a gold 24-hour hand (hand_gmt, driven by watch_time.c). -->
+	<consts>
+		<color name="gold" value="0xE5B64A" help="GMT hand" />
+	</consts>
+
+	<styles>
+		<style name="style_dial" bg_color="0x0B0B0D" />
+		<style name="style_bezel_half" arc_width="38" arc_rounded="false" pad_all="0" />
+		<style name="style_bezel_scale_main" arc_opa="0%" />
+		<style name="style_bezel_scale_major" length="0" line_width="0" text_font="font_watch_caption" text_color="0xFFFFFF" pad_radial="-4" />
+		<style name="style_bezel_scale_minor" length="6" line_width="2" line_color="0xFFFFFF" line_opa="70%" />
+		<style name="style_batons_main" arc_opa="0%" />
+		<style name="style_batons" length="26" line_width="8" line_color="0xF4F4F0" />
+		<style name="style_date" bg_color="0xFFFFFF" bg_opa="100%" radius="4" text_color="0x111111" text_font="font_watch_caption" pad_hor="6" pad_ver="3" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+		<style name="style_dial" />
+
+		<!-- 24h bezel: blue day (top) and red night (bottom) -->
+		<lv_arc width="466" height="466" align="center" clickable="false" bg_start_angle="180" bg_end_angle="0" rotation="0" style_arc_color="0x1F3E8F" style_bg_opa-knob="0%" style_arc_opa-indicator="0%">
+			<style name="style_bezel_half" />
+		</lv_arc>
+		<lv_arc width="466" height="466" align="center" clickable="false" bg_start_angle="0" bg_end_angle="180" rotation="0" style_arc_color="0xB0183A" style_bg_opa-knob="0%" style_arc_opa-indicator="0%">
+			<style name="style_bezel_half" />
+		</lv_arc>
+		<lv_scale width="444" height="444" align="center" mode="round_inner" total_tick_count="24" major_tick_every="2" min_value="0" max_value="23" angle_range="345" rotation="270" label_show="true" text_src="24 2 4 6 8 10 12 14 16 18 20 22" clickable="false">
+			<style name="style_bezel_scale_main" />
+			<style name="style_bezel_scale_minor" selector="items" />
+			<style name="style_bezel_scale_major" selector="indicator" />
+		</lv_scale>
+
+		<!-- Hour batons (3 o'clock makes room for the date) -->
+		<lv_scale width="372" height="372" align="center" mode="round_inner" total_tick_count="12" major_tick_every="1" min_value="0" max_value="11" angle_range="330" rotation="270" label_show="false" clickable="false">
+			<style name="style_batons_main" />
+			<style name="style_batons" selector="indicator" />
+		</lv_scale>
+		<lv_label align="center" x="112" bind_text="subject_day" bind_text-fmt="%d" clickable="false">
+			<style name="style_date" />
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+		</lv_label>
+
+		<!-- Wordmark -->
+		<lv_label text="LVGL" align="center" y="-84" style_text_font="font_watch_title" style_text_letter_space="4" />
+		<lv_label text="GMT MASTER" align="center" y="-56" style_text_font="font_watch_caption" style_text_color="#gold" style_text_letter_space="2" />
+
+		<!-- Hands, posed at 10:09:30; the GMT hand turns once a day -->
+		<hand name="hand_gmt" w="4" h="200" pivot_x="2" pivot_y="176" offset="-76" angle="1523" style_bg_color="#gold">
+			<box width="16" height="16" align="top_mid" clickable="false" style_radius="3" style_bg_color="#gold" style_bg_opa="100%" />
+		</hand>
+		<hand name="hand_hour" w="16" h="128" pivot_x="8" pivot_y="108" offset="-44" angle="3047" style_bg_color="0xF4F4F0" />
+		<hand name="hand_min" w="11" h="184" pivot_x="5" pivot_y="162" offset="-70" angle="570" style_bg_color="0xF4F4F0" />
+		<hand name="hand_sec" w="3" h="210" pivot_x="1" pivot_y="176" offset="-71" angle="1800">
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+		<box width="14" height="14" align="center" clickable="false" style_radius="#radius_round" style_bg_color="0xF4F4F0" style_bg_opa="100%" />
+	</view>
+</component>

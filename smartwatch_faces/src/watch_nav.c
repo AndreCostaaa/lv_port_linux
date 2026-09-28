@@ -116,6 +116,11 @@ void watch_nav_open_face_edit(int32_t face_index)
     push_and_load(SCREEN(screen_face_edit), LV_SCREEN_LOAD_ANIM_MOVE_LEFT, LV_SCREEN_LOAD_ANIM_MOVE_RIGHT);
 }
 
+void watch_nav_open_gallery(void)
+{
+    push_and_load(SCREEN(screen_face_gallery), LV_SCREEN_LOAD_ANIM_MOVE_TOP, LV_SCREEN_LOAD_ANIM_MOVE_BOTTOM);
+}
+
 void watch_nav_close_face_edit(void)
 {
     watch_nav_back();

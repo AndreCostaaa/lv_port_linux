@@ -1,0 +1,147 @@
+<component>
+	<!-- Skeleton: an open-worked dial showing the gear train (toothed wheels,
+	     spokes, ruby jewels), a bridge, a chapter ring and outline hands.
+	     The heaviest face of the set. -->
+	<consts>
+		<color name="steel" value="0x9AA0AA" help="Wheels and bridges" />
+		<color name="ruby" value="0xB3203A" help="Jewels" />
+	</consts>
+
+	<styles>
+		<style name="style_movement" bg_color="0x17191D" bg_grad_color="0x08090B" bg_grad_dir="ver" />
+		<style name="style_gear_main" arc_opa="0%" />
+		<style name="style_gear_teeth" length="10" line_width="6" line_color="#steel" />
+		<style name="style_gear_rim" radius="#radius_round" border_width="4" border_color="#steel" />
+		<style name="style_spoke" radius="4" bg_color="#steel" bg_opa="100%" />
+		<style name="style_jewel" radius="#radius_round" bg_color="#ruby" bg_opa="100%" border_width="3" border_color="0xD9DCE1" />
+		<style name="style_bridge" radius="40" bg_color="0x3A3F47" bg_opa="90%" border_width="2" border_color="0x6C727C" />
+		<style name="style_ring_main" arc_opa="0%" />
+		<style name="style_ring_minor" length="6" line_width="1" line_color="0xD9DCE1" line_opa="70%" />
+		<style name="style_ring_major" length="18" line_width="4" line_color="0xD9DCE1" text_font="font_watch_caption" text_color="0xD9DCE1" pad_radial="6" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+		<style name="style_movement" />
+
+		<!-- Gear, 44 teeth -->
+		<box align="center" x="-72" y="-46" width="190" height="190" clickable="false">
+			<lv_scale width="190" height="190" align="center" mode="round_inner" total_tick_count="44" major_tick_every="1" min_value="0" max_value="43" angle_range="360" rotation="0" label_show="false" clickable="false">
+				<style name="style_gear_main" />
+				<style name="style_gear_teeth" selector="indicator" />
+			</lv_scale>
+			<box align="center" width="170" height="170" clickable="false">
+				<style name="style_gear_rim" />
+			</box>
+			<box align="center" width="8" height="156" clickable="false" style_transform_rotation="0" style_transform_pivot_x="4" style_transform_pivot_y="78">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="156" clickable="false" style_transform_rotation="600" style_transform_pivot_x="4" style_transform_pivot_y="78">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="156" clickable="false" style_transform_rotation="1200" style_transform_pivot_x="4" style_transform_pivot_y="78">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="18" height="18" clickable="false">
+				<style name="style_jewel" />
+			</box>
+		</box>
+		<!-- Gear, 34 teeth -->
+		<box align="center" x="88" y="58" width="150" height="150" clickable="false">
+			<lv_scale width="150" height="150" align="center" mode="round_inner" total_tick_count="34" major_tick_every="1" min_value="0" max_value="33" angle_range="360" rotation="0" label_show="false" clickable="false">
+				<style name="style_gear_main" />
+				<style name="style_gear_teeth" selector="indicator" />
+			</lv_scale>
+			<box align="center" width="130" height="130" clickable="false">
+				<style name="style_gear_rim" />
+			</box>
+			<box align="center" width="8" height="116" clickable="false" style_transform_rotation="0" style_transform_pivot_x="4" style_transform_pivot_y="58">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="116" clickable="false" style_transform_rotation="600" style_transform_pivot_x="4" style_transform_pivot_y="58">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="116" clickable="false" style_transform_rotation="1200" style_transform_pivot_x="4" style_transform_pivot_y="58">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="18" height="18" clickable="false">
+				<style name="style_jewel" />
+			</box>
+		</box>
+		<!-- Gear, 24 teeth -->
+		<box align="center" x="-40" y="116" width="104" height="104" clickable="false">
+			<lv_scale width="104" height="104" align="center" mode="round_inner" total_tick_count="24" major_tick_every="1" min_value="0" max_value="23" angle_range="360" rotation="0" label_show="false" clickable="false">
+				<style name="style_gear_main" />
+				<style name="style_gear_teeth" selector="indicator" />
+			</lv_scale>
+			<box align="center" width="84" height="84" clickable="false">
+				<style name="style_gear_rim" />
+			</box>
+			<box align="center" width="8" height="70" clickable="false" style_transform_rotation="0" style_transform_pivot_x="4" style_transform_pivot_y="35">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="70" clickable="false" style_transform_rotation="600" style_transform_pivot_x="4" style_transform_pivot_y="35">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="70" clickable="false" style_transform_rotation="1200" style_transform_pivot_x="4" style_transform_pivot_y="35">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="18" height="18" clickable="false">
+				<style name="style_jewel" />
+			</box>
+		</box>
+		<!-- Gear, 20 teeth -->
+		<box align="center" x="96" y="-104" width="84" height="84" clickable="false">
+			<lv_scale width="84" height="84" align="center" mode="round_inner" total_tick_count="20" major_tick_every="1" min_value="0" max_value="19" angle_range="360" rotation="0" label_show="false" clickable="false">
+				<style name="style_gear_main" />
+				<style name="style_gear_teeth" selector="indicator" />
+			</lv_scale>
+			<box align="center" width="64" height="64" clickable="false">
+				<style name="style_gear_rim" />
+			</box>
+			<box align="center" width="8" height="50" clickable="false" style_transform_rotation="0" style_transform_pivot_x="4" style_transform_pivot_y="25">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="50" clickable="false" style_transform_rotation="600" style_transform_pivot_x="4" style_transform_pivot_y="25">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="8" height="50" clickable="false" style_transform_rotation="1200" style_transform_pivot_x="4" style_transform_pivot_y="25">
+				<style name="style_spoke" />
+			</box>
+			<box align="center" width="18" height="18" clickable="false">
+				<style name="style_jewel" />
+			</box>
+		</box>
+
+		<!-- Bridge across the train -->
+		<box align="center" x="10" y="10" width="300" height="70" clickable="false" style_transform_rotation="-300" style_transform_pivot_x="150" style_transform_pivot_y="35">
+			<style name="style_bridge" />
+			<box align="left_mid" x="24" width="16" height="16" clickable="false">
+				<style name="style_jewel" />
+			</box>
+			<box align="right_mid" x="-24" width="16" height="16" clickable="false">
+				<style name="style_jewel" />
+			</box>
+			<lv_label text="LVGL · SQUELETTE" align="center" style_text_font="font_watch_caption" style_text_color="0xD9DCE1" style_text_letter_space="1" />
+		</box>
+
+		<!-- Chapter ring -->
+		<lv_scale width="452" height="452" align="center" mode="round_inner" total_tick_count="60" major_tick_every="5" min_value="0" max_value="59" angle_range="354" rotation="270" label_show="true" text_src="12 1 2 3 4 5 6 7 8 9 10 11" clickable="false">
+			<style name="style_ring_main" />
+			<style name="style_ring_minor" selector="items" />
+			<style name="style_ring_major" selector="indicator" />
+		</lv_scale>
+
+		<!-- Outline hands, posed at 10:09:30 -->
+		<hand name="hand_hour" w="18" h="140" pivot_x="9" pivot_y="120" offset="-50" angle="3047" style_bg_opa="0%" style_border_width="3" style_border_color="0xF2F3F5" />
+		<hand name="hand_min" w="14" h="200" pivot_x="7" pivot_y="180" offset="-80" angle="570" style_bg_opa="0%" style_border_width="3" style_border_color="0xF2F3F5" />
+		<hand name="hand_sec" w="3" h="226" pivot_x="1" pivot_y="190" offset="-77" angle="1800" style_bg_color="#ruby">
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+		<box width="16" height="16" align="center" clickable="false">
+			<style name="style_jewel" />
+		</box>
+	</view>
+</component>

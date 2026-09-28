@@ -3,20 +3,26 @@
      scaled face tree. Phase 2 replaces these with snapshots. -->
 <screen permanent="true">
 	<styles>
-		<style name="style_picker_bg" blur_radius="30" recolor="#color_bg" recolor_opa="55%" />
-		<style name="style_dot" width="8" height="8" radius="#radius_round" bg_color="#color_text" bg_opa="30%" />
-		<style name="style_dot_active" bg_opa="100%" />
+		<style name="style_picker_bg" recolor="#color_bg" recolor_opa="55%" />
+		<!-- A blur blurs what is already drawn under the widget (not its
+		     children), so the frost is a transparent box on top of the face -->
+		<style name="style_frost" width="100%" height="100%" blur_radius="30" />
 	</styles>
 
 	<view extends="lv_obj" scrollable="false">
 		<style name="style_watch_screen" />
+		<!-- Swipe up: the face gallery -->
+		<event_cb callback="watch_on_picker_gesture" trigger="gesture" />
 
-		<!-- Frosted current face. The plain holder lets watch_thumbs.c
-		     snapshot picker_bg including its own blur and recolor. -->
+		<!-- Frosted current face: the face (darkened) with a blurring frost
+		     on top. watch_thumbs.c snapshots the plain holder. -->
 		<box name="picker_bg_holder" width="100%" height="100%" clickable="false" scrollable="false">
 			<face_stack name="picker_bg" align="center" subject="subject_active_face" clickable="false">
 				<style name="style_picker_bg" />
 			</face_stack>
+			<box name="picker_bg_frost" clickable="false">
+				<style name="style_frost" />
+			</box>
 		</box>
 
 		<!-- Carousel, one card per face, snapping to the centre -->
@@ -36,29 +42,19 @@
 			<face_card_minimal />
 			<face_card_info />
 			<face_card_chrono />
+			<face_card_pilot />
+			<face_card_diver />
+			<face_card_gmt />
+			<face_card_moon />
+			<face_card_numerals />
+			<face_card_modular />
+			<face_card_lcd />
+			<face_card_radar />
+			<face_card_gradient />
+			<face_card_solar />
+			<face_card_bauhaus />
+			<face_card_skeleton />
 		</row>
 
-		<!-- Page indicator (static in phase 1) -->
-		<row name="page_dots" align="bottom_mid" y="-14" gap="8" clickable="false">
-			<box>
-				<style name="style_dot" />
-				<style name="style_dot_active" />
-			</box>
-			<box>
-				<style name="style_dot" />
-			</box>
-			<box>
-				<style name="style_dot" />
-			</box>
-			<box>
-				<style name="style_dot" />
-			</box>
-			<box>
-				<style name="style_dot" />
-			</box>
-			<box>
-				<style name="style_dot" />
-			</box>
-		</row>
 	</view>
 </screen>

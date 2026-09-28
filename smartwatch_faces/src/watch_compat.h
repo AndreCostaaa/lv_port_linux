@@ -37,4 +37,13 @@ static inline void watch_obj_set_clickable(lv_obj_t * obj, bool en)
 #endif
 }
 
+static inline void watch_obj_set_overflow_visible(lv_obj_t * obj, bool en)
+{
+#if LVGL_VERSION_MAJOR >= 10
+    lv_obj_set_overflow_visible(obj, en);
+#else
+    lv_obj_set_flag(obj, LV_OBJ_FLAG_OVERFLOW_VISIBLE, en);
+#endif
+}
+
 #endif /*WATCH_COMPAT_H*/

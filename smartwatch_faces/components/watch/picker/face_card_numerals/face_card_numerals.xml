@@ -1,0 +1,18 @@
+<component>
+	<previews>
+		<preview name="default" width="300" height="466" style_bg_color="0x000000" />
+	</previews>
+
+	<!-- Picker card for face_numerals: a live face instance scaled into the
+	     round face_slot. Tap selects the face, long-press removes it. -->
+	<view extends="face_card_base" face_index="10" title="Numerals">
+		<box name="face_slot" align="center" scrollable="false">
+			<style name="style_face_slot" />
+			<event_cb callback="watch_on_face_select" trigger="clicked" user_data="10" />
+			<event_cb callback="watch_on_face_delete" trigger="long_pressed" user_data="10" />
+			<face_numerals align="center">
+				<style name="style_face_thumb" />
+			</face_numerals>
+		</box>
+	</view>
+</component>

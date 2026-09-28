@@ -6,7 +6,6 @@ config LV_USE_DEMO_TRUCK
 
 config LV_USE_DEMO_WATCH
 	bool "Smartwatch snapshot demo"
-	depends on LV_USE_SNAPSHOT
 
 config LV_DEMO_WATCH_USE_SNAPSHOTS
 	bool "Render the watch face picker from snapshots"

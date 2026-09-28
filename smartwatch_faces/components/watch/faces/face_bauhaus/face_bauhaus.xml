@@ -1,0 +1,49 @@
+<component>
+	<!-- Bauhaus: a light face built from primary-colour shapes, four black
+	     markers and heavy black hands. -->
+	<consts>
+		<color name="ink" value="0x151515" help="Markers and hands" />
+	</consts>
+
+	<styles>
+		<style name="style_paper" bg_color="0xF1EADB" />
+		<style name="style_marker" bg_color="#ink" bg_opa="100%" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+		<style name="style_paper" />
+
+		<!-- Composition -->
+		<box align="center" x="-58" y="-62" width="200" height="200" clickable="false" style_radius="#radius_round" style_bg_color="0xD7263D" style_bg_opa="100%" />
+		<box align="center" x="74" y="44" width="150" height="150" clickable="false" style_bg_color="0x1D4E9E" style_bg_opa="100%" style_transform_rotation="150" style_transform_pivot_x="75" style_transform_pivot_y="75" />
+		<box align="center" x="-86" y="100" width="70" height="180" clickable="false" style_bg_color="0xF4C430" style_bg_opa="100%" />
+		<box align="center" x="96" y="-110" width="60" height="60" clickable="false" style_radius="#radius_round" style_border_width="8" style_border_color="#ink" />
+
+		<!-- Markers at 12, 3, 6, 9 -->
+		<box align="top_mid" y="26" width="10" height="40" clickable="false">
+			<style name="style_marker" />
+		</box>
+		<box align="bottom_mid" y="-26" width="10" height="40" clickable="false">
+			<style name="style_marker" />
+		</box>
+		<box align="left_mid" x="26" width="40" height="10" clickable="false">
+			<style name="style_marker" />
+		</box>
+		<box align="right_mid" x="-26" width="40" height="10" clickable="false">
+			<style name="style_marker" />
+		</box>
+
+		<lv_label text="LVGL" align="center" y="170" style_text_font="font_watch_caption" style_text_color="#ink" style_text_letter_space="4" />
+
+		<!-- Hands, posed at 10:09:30 -->
+		<hand name="hand_hour" w="18" h="130" pivot_x="9" pivot_y="112" offset="-47" angle="3047" style_bg_color="#ink" style_radius="2" />
+		<hand name="hand_min" w="12" h="196" pivot_x="6" pivot_y="176" offset="-78" angle="570" style_bg_color="#ink" style_radius="2" />
+		<hand name="hand_sec" w="4" h="220" pivot_x="2" pivot_y="186" offset="-76" angle="1800" style_bg_color="0xD7263D">
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+		<box width="20" height="20" align="center" clickable="false" style_radius="#radius_round" style_bg_color="#ink" style_bg_opa="100%" />
+	</view>
+</component>

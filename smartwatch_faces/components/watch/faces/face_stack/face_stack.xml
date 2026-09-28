@@ -4,12 +4,12 @@
 	</previews>
 
 	<api>
-		<prop name="subject" type="subject" default="subject_active_face" help="Int subject (0..5) selecting the visible face" />
+		<prop name="subject" type="subject" default="subject_active_face" help="Int subject (0..17) selecting the visible face" />
 	</api>
 
-	<!-- All six faces stacked; only the one whose index matches $subject
+	<!-- All 18 faces stacked; only the one whose index matches $subject
 	     is visible (hidden faces cost nothing to draw). Face index order:
-	     0 classic, 1 activity, 2 sport, 3 minimal, 4 info, 5 chrono. -->
+	     0 classic, 1 activity, 2 sport, 3 minimal, 4 info, 5 chrono, 6 pilot, 7 diver, 8 gmt, 9 moon, 10 numerals, 11 modular, 12 lcd, 13 radar, 14 gradient, 15 solar, 16 bauhaus, 17 skeleton. -->
 	<view extends="box" scrollable="false">
 		<style name="style_face" />
 		<face_classic align="center">
@@ -30,5 +30,41 @@
 		<face_chrono align="center">
 			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="5" />
 		</face_chrono>
+		<face_pilot align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="6" />
+		</face_pilot>
+		<face_diver align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="7" />
+		</face_diver>
+		<face_gmt align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="8" />
+		</face_gmt>
+		<face_moon align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="9" />
+		</face_moon>
+		<face_numerals align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="10" />
+		</face_numerals>
+		<face_modular align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="11" />
+		</face_modular>
+		<face_lcd align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="12" />
+		</face_lcd>
+		<face_radar align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="13" />
+		</face_radar>
+		<face_gradient align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="14" />
+		</face_gradient>
+		<face_solar align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="15" />
+		</face_solar>
+		<face_bauhaus align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="16" />
+		</face_bauhaus>
+		<face_skeleton align="center">
+			<bind_flag_if_not_eq subject="$subject" flag="hidden" ref_value="17" />
+		</face_skeleton>
 	</view>
 </component>

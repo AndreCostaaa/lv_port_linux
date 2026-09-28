@@ -1,0 +1,73 @@
+<component>
+	<!-- Retro LCD: a resin case with a grey-green segment-style panel, the
+	     day and date, seconds and printed button labels. -->
+	<consts>
+		<color name="ink" value="0x1A2114" help="LCD segments" />
+		<color name="case_print" value="0xC9CCD2" help="Printing on the case" />
+		<color name="orange" value="0xF26B1D" help="Accent print" />
+	</consts>
+
+	<styles>
+		<style name="style_case" width="392" height="300" radius="46" bg_color="0x2C2F33" bg_grad_color="0x17191C" bg_grad_dir="ver" bg_opa="100%" border_width="3" border_color="0x3E4248" />
+		<style name="style_panel" width="310" height="164" radius="14" bg_color="0xBCC7A8" bg_grad_color="0x98A585" bg_grad_dir="ver" bg_opa="100%" border_width="4" border_color="0x0E0F11" />
+		<style name="style_case_text" text_font="font_watch_caption" text_color="#case_print" text_letter_space="1" />
+		<style name="style_lcd_small" text_font="font_watch_title" text_color="#ink" />
+		<style name="style_lcd_digits" text_font="font_watch_digits_md" text_color="#ink" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+
+		<box align="center" clickable="false">
+			<style name="style_case" />
+
+			<lv_label text="LVGL" align="top_mid" y="14" style_text_font="font_watch_title" style_text_color="#case_print" style_text_letter_space="4" />
+			<lv_label text="ILLUMINATOR" align="top_left" x="34" y="48" style_text_font="font_watch_caption" style_text_color="#orange" />
+			<lv_label text="WR 200M" align="top_right" x="-34" y="48">
+				<style name="style_case_text" />
+			</lv_label>
+
+			<!-- LCD panel -->
+			<box align="center" y="18" clickable="false">
+				<style name="style_panel" />
+				<row align="top_mid" y="10" gap="24" clickable="false">
+					<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+					<lv_label bind_text="subject_weekday">
+						<style name="style_lcd_small" />
+					</lv_label>
+					<lv_label bind_text="subject_day" bind_text-fmt="%d">
+						<style name="style_lcd_small" />
+					</lv_label>
+				</row>
+				<row align="bottom_mid" y="-6" vertical_align="end" gap="6" clickable="false">
+					<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
+						<style name="style_lcd_digits" />
+					</lv_label>
+					<lv_label text=":">
+						<style name="style_lcd_digits" />
+					</lv_label>
+					<lv_label bind_text="subject_minute" bind_text-fmt="%02d">
+						<style name="style_lcd_digits" />
+					</lv_label>
+					<lv_label bind_text="subject_second" bind_text-fmt="%02d" style_pad_bottom="10">
+						<style name="style_lcd_small" />
+						<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+					</lv_label>
+				</row>
+			</box>
+
+			<!-- Button labels -->
+			<lv_label text="LIGHT" align="bottom_left" x="34" y="-18">
+				<style name="style_case_text" />
+			</lv_label>
+			<lv_label text="MODE" align="bottom_mid" y="-18">
+				<style name="style_case_text" />
+			</lv_label>
+			<lv_label text="ALARM" align="bottom_right" x="-34" y="-18">
+				<style name="style_case_text" />
+			</lv_label>
+		</box>
+	</view>
+</component>

@@ -1,0 +1,16 @@
+<component>
+	<previews>
+		<preview name="default" width="140" height="140" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="face_index" type="string" default="0" help="Index of the face (0..17), passed to watch_on_face_select as user_data" />
+	</api>
+
+	<!-- One tile of the face gallery: a small round clipped slot. The
+	     gallery_tile_* variants put a live face in it. Tap selects the face. -->
+	<view extends="box" scrollable="false">
+		<style name="style_gallery_tile" />
+		<event_cb callback="watch_on_face_select" trigger="clicked" user_data="$face_index" />
+	</view>
+</component>

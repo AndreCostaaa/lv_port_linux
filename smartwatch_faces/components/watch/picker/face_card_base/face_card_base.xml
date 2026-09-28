@@ -4,7 +4,7 @@
 	</previews>
 
 	<api>
-		<prop name="face_index" type="string" default="0" help="Index of the face (0..5), passed to the C callbacks as user_data" />
+		<prop name="face_index" type="string" default="0" help="Index of the face (0..17), passed to the C callbacks as user_data" />
 		<prop name="title" type="string" default="Classic" help="Face name shown above the preview" />
 	</api>
 

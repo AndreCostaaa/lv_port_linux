@@ -23,6 +23,7 @@
 #include "watch_bench.h"
 #include "watch_nav.h"
 #include "watch_thumbs.h"
+#include "watch_depth.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,7 +35,7 @@
 
 #define STAGE_SETTLE_MS   1500
 #define STATIC_MEASURE_MS  4000   /* home and static picker */
-#define SCROLL_MEASURE_MS 10000   /* scrolling picker */
+#define SCROLL_MEASURE_MS  5000   /* scrolling: one full sweep there and back */
 #define SCROLL_SWEEP_MS   2500
 #define FLUSH_STALL_MS    100      /* average flush above this: display was blocked */
 
@@ -67,13 +68,19 @@ static void enter_home(void);
 static void enter_picker_live(void);
 static void enter_picker_snapshot(void);
 static void enter_scrolling(void);
+static void enter_gallery(void);
+static void enter_gallery_scrolling(void);
 
 static const bench_stage_t stages[] = {
     {"home",             MODE_ANY,      enter_home,            STATIC_MEASURE_MS},
     {"picker static",    MODE_LIVE,     enter_picker_live,     STATIC_MEASURE_MS},
     {"picker scrolling", MODE_LIVE,     enter_scrolling,       SCROLL_MEASURE_MS},
+    {"gallery static",   MODE_LIVE,     enter_gallery,         STATIC_MEASURE_MS},
+    {"gallery scrolling", MODE_LIVE,    enter_gallery_scrolling, SCROLL_MEASURE_MS},
     {"picker static",    MODE_SNAPSHOT, enter_picker_snapshot, STATIC_MEASURE_MS},
     {"picker scrolling", MODE_SNAPSHOT, enter_scrolling,       SCROLL_MEASURE_MS},
+    {"gallery static",   MODE_SNAPSHOT, enter_gallery,         STATIC_MEASURE_MS},
+    {"gallery scrolling", MODE_SNAPSHOT, enter_gallery_scrolling, SCROLL_MEASURE_MS},
 };
 #define STAGE_CNT (sizeof(stages) / sizeof(stages[0]))
 
@@ -93,6 +100,7 @@ static uint32_t flush_in_render;
 static uint32_t max_render;
 
 static lv_obj_t * carousel;
+static lv_obj_t * grid;       /* gallery */
 static long cpu_cnt = 1;
 
 /**********************
@@ -198,10 +206,25 @@ static void scroll_exec_cb(void * var, int32_t v)
     lv_obj_scroll_to_x(var, v, LV_ANIM_OFF);
 }
 
+static void scroll_y_exec_cb(void * var, int32_t v)
+{
+    lv_obj_scroll_to_y(var, v, LV_ANIM_OFF);
+}
+
 static void stop_scrolling(void)
 {
     lv_anim_delete(carousel, scroll_exec_cb);
     lv_obj_scroll_to_x(carousel, 0, LV_ANIM_OFF);
+    if(grid) {
+        lv_anim_delete(grid, scroll_y_exec_cb);
+        lv_obj_scroll_to_y(grid, 0, LV_ANIM_OFF);
+    }
+}
+
+/* From the gallery back to the picker (the bench's order is picker, gallery) */
+static void leave_gallery(void)
+{
+    if(watch_nav_get_current() == screen_face_gallery) watch_nav_back();
 }
 
 static void enter_home(void)
@@ -209,8 +232,10 @@ static void enter_home(void)
     lv_subject_set_int(&subject_active_face, 0);
 }
 
+/* The plain picker stages run without the depth effect */
 static void enter_picker_live(void)
 {
+    watch_depth_set_enabled(false);
     watch_thumbs_set_enabled(false);
     watch_nav_open_picker();
 }
@@ -218,17 +243,46 @@ static void enter_picker_live(void)
 static void enter_picker_snapshot(void)
 {
     stop_scrolling();
+    leave_gallery();
+    watch_depth_set_enabled(false);
     watch_thumbs_set_enabled(true);
+    watch_depth_update();
 }
 
 static void enter_scrolling(void)
 {
+    if(lv_anim_get(carousel, scroll_exec_cb)) return;   /* already sweeping */
+
     int32_t span = lv_obj_get_scroll_x(carousel) + lv_obj_get_scroll_right(carousel);
 
     lv_anim_t a;
     lv_anim_init(&a);
     lv_anim_set_var(&a, carousel);
     lv_anim_set_exec_cb(&a, scroll_exec_cb);
+    lv_anim_set_values(&a, 0, span);
+    lv_anim_set_duration(&a, SCROLL_SWEEP_MS);
+    lv_anim_set_reverse_duration(&a, SCROLL_SWEEP_MS);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_start(&a);
+}
+
+static void enter_gallery(void)
+{
+    stop_scrolling();
+    watch_depth_set_enabled(false);
+    watch_nav_open_gallery();
+}
+
+/* Sweep the gallery top to bottom and back */
+static void enter_gallery_scrolling(void)
+{
+    if(grid == NULL) return;
+    int32_t span = lv_obj_get_scroll_y(grid) + lv_obj_get_scroll_bottom(grid);
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, grid);
+    lv_anim_set_exec_cb(&a, scroll_y_exec_cb);
     lv_anim_set_values(&a, 0, span);
     lv_anim_set_duration(&a, SCROLL_SWEEP_MS);
     lv_anim_set_reverse_duration(&a, SCROLL_SWEEP_MS);
@@ -363,6 +417,7 @@ static void stage_cb(lv_timer_t * t)
 void watch_bench_start(void)
 {
     carousel = lv_obj_find_by_name(screen_picker, "face_carousel");
+    grid = screen_face_gallery ? lv_obj_find_by_name(screen_face_gallery, "face_grid") : NULL;
 #if defined(__linux__)
     cpu_cnt = sysconf(_SC_NPROCESSORS_ONLN);
     if(cpu_cnt < 1) cpu_cnt = 1;

@@ -20,6 +20,7 @@ void watch_nav_open_picker(void);
 void watch_nav_select_face(int32_t face_index);        /* sets subject, back home */
 void watch_nav_delete_face(int32_t face_index);        /* phase 1: hide card     */
 void watch_nav_open_face_edit(int32_t face_index);
+void watch_nav_open_gallery(void);                     /* picker -> face gallery  */
 void watch_nav_close_face_edit(void);
 void watch_nav_open_launcher(void);
 void watch_nav_open_app(const char * app_id, lv_obj_t * origin);

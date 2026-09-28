@@ -1,0 +1,72 @@
+<component>
+	<!-- Modular: Wear-style digital face, time and date on top and four
+	     complication modules below. -->
+	<styles>
+		<style name="style_digits" text_font="font_watch_digits_md" />
+		<style name="style_module" width="146" height="104" radius="20" bg_color="#color_surface" bg_opa="100%" />
+	</styles>
+
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
+		<style name="style_face" />
+
+		<!-- Date and time -->
+		<row align="top_mid" y="40" gap="8" clickable="false">
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+			<accent_label bind_text="subject_weekday" style_text_font="font_watch_caption" />
+			<lv_label bind_text="subject_day" bind_text-fmt="%d" style_text_font="font_watch_caption" />
+		</row>
+		<row align="top_mid" y="62" vertical_align="center" clickable="false">
+			<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label text=":" style_text_color="#color_text_muted">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label bind_text="subject_minute" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+		</row>
+
+		<!-- Modules -->
+		<column align="center" y="72" gap="8" clickable="false">
+			<row gap="8" clickable="false">
+			<column clickable="false" scrollable="false" gap="2" style_pad_all="12">
+				<style name="style_module" />
+				<icon src="icon_footprints_24" color="#color_exercise" />
+				<lv_label bind_text="subject_steps" bind_text-fmt="%d" style_text_font="font_watch_title" />
+				<lv_label text="STEPS">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			<column clickable="false" scrollable="false" gap="2" style_pad_all="12">
+				<style name="style_module" />
+				<icon src="icon_heart_24" color="#color_heart" />
+				<lv_label bind_text="subject_heart_rate" bind_text-fmt="%d" style_text_font="font_watch_title" />
+				<lv_label text="BPM">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			</row>
+			<row gap="8" clickable="false">
+			<column clickable="false" scrollable="false" gap="2" style_pad_all="12">
+				<style name="style_module" />
+				<icon src="icon_thermometer_24" color="#color_weather" />
+				<lv_label bind_text="subject_temp" bind_text-fmt="%d°" style_text_font="font_watch_title" />
+				<lv_label text="OUTSIDE">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			<column clickable="false" scrollable="false" gap="2" style_pad_all="12">
+				<style name="style_module" />
+				<icon src="icon_battery_24" color="#color_stand" />
+				<lv_label bind_text="subject_battery" bind_text-fmt="%d%%" style_text_font="font_watch_title" />
+				<lv_label text="BATTERY">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			</row>
+		</column>
+	</view>
+</component>

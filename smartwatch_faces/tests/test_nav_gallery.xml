@@ -1,0 +1,26 @@
+<!-- Picker -> swipe up -> gallery -> tap a tile: that face on home (C navigation) -->
+<test>
+	<view extends="screen_picker" />
+	<steps>
+		<move_to x="233" y="380" />
+		<press />
+		<wait ms="40" />
+		<move_to x="233" y="340" />
+		<wait ms="40" />
+		<move_to x="233" y="280" />
+		<wait ms="40" />
+		<move_to x="233" y="200" />
+		<wait ms="40" />
+		<release />
+		<wait ms="800" />
+		<screenshot_compare path="nav_gallery.png" />
+
+		<click_on name="tile_4" />
+		<wait ms="800" />
+		<subject_compare subject="subject_active_face" value="4" />
+		<screenshot_compare path="nav_gallery_selected.png" />
+
+		<!-- Tests share subjects: restore the default -->
+		<subject_set subject="subject_active_face" value="0" />
+	</steps>
+</test>
