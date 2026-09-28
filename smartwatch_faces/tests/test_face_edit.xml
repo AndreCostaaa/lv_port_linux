@@ -1,0 +1,12 @@
+<!-- Face edit: picking the orange swatch recolors the preview -->
+<test>
+	<view extends="screen_face_edit" />
+	<steps>
+		<screenshot_compare path="screen_face_edit.png" />
+		<click_on name="swatch_orange" />
+		<subject_compare subject="subject_accent" value="2" />
+		<screenshot_compare path="screen_face_edit_orange.png" />
+		<!-- Tests share subjects: restore the default -->
+		<subject_set subject="subject_accent" value="0" />
+	</steps>
+</test>

@@ -1,0 +1,42 @@
+<component>
+	<previews>
+		<preview name="default" width="320" height="50" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="day" type="string" default="TUE" help="Short weekday" />
+		<prop name="icon" type="image" default="icon_sun_24" help="24 px weather icon" />
+		<prop name="low" type="int" default="12" help="Low temperature, positions the range bar" />
+		<prop name="high" type="int" default="22" help="High temperature, positions the range bar" />
+		<prop name="low_text" type="string" default="12°" help="Low temperature label" />
+		<prop name="high_text" type="string" default="22°" help="High temperature label" />
+	</api>
+
+	<styles>
+		<style name="style_forecast_row" width="300" />
+		<style name="style_day" width="56" text_font="font_watch_caption" />
+		<style name="style_temp" width="40" text_font="font_watch_caption" text_align="right" />
+		<style name="style_range" height="8" radius="#radius_round" bg_color="#color_surface_hi" bg_opa="100%" />
+		<style name="style_range_ind" radius="#radius_round" bg_color="#color_weather" bg_grad_color="#color_accent_orange" bg_grad_dir="hor" bg_opa="100%" />
+	</styles>
+
+	<!-- One day of the weekly forecast: day, icon, low, a low..high range
+	     bar on a shared 5..30 °C scale, high. -->
+	<view extends="row" gap="10" vertical_align="center">
+		<style name="style_forecast_row" />
+		<lv_label text="$day">
+			<style name="style_day" />
+		</lv_label>
+		<icon src="$icon" color="#color_weather" />
+		<lv_label text="$low_text" style_text_color="#color_text_muted">
+			<style name="style_temp" />
+		</lv_label>
+		<lv_bar mode="range" min_value="5" max_value="30" start_value="$low" value="$high" flex_grow="1">
+			<style name="style_range" />
+			<style name="style_range_ind" selector="indicator" />
+		</lv_bar>
+		<lv_label text="$high_text">
+			<style name="style_temp" />
+		</lv_label>
+	</view>
+</component>

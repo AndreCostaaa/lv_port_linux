@@ -1,0 +1,54 @@
+<!-- FACE EDIT: the "back of the card". A live preview of the face being
+     edited, the accent palette and the complication toggles. -->
+<screen permanent="true">
+	<styles>
+		<style name="style_edit_slot" width="200" height="200" radius="#radius_round" clip_corner="true" bg_color="#color_bg" bg_opa="100%" border_width="2" border_color="#color_surface_hi" />
+		<!-- 200 / 466 * 256 -->
+		<style name="style_edit_thumb" transform_scale_x="110" transform_scale_y="110" transform_pivot_x="#watch_pivot" transform_pivot_y="#watch_pivot" />
+		<style name="style_done" width="124" height="46" radius="#radius_round" bg_opa="100%" text_color="#color_bg" />
+	</styles>
+
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+
+		<lv_label text="Customize" align="top_mid" y="24">
+			<style name="style_caption" />
+		</lv_label>
+
+		<!-- Live preview -->
+		<box name="edit_preview" align="top_mid" y="54" scrollable="false" clickable="false">
+			<style name="style_edit_slot" />
+			<face_stack align="center" subject="subject_edit_face">
+				<style name="style_edit_thumb" />
+			</face_stack>
+		</box>
+
+		<!-- Accent palette -->
+		<row align="top_mid" y="272" gap="12">
+			<swatch color="#color_accent_lime" index="0" />
+			<swatch color="#color_accent_cyan" index="1" />
+			<swatch name="swatch_orange" color="#color_accent_orange" index="2" />
+			<swatch color="#color_accent_pink" index="3" />
+			<swatch color="#color_accent_violet" index="4" />
+		</row>
+
+		<!-- Complications -->
+		<row align="top_mid" y="332" gap="10">
+			<toggle_chip text="Seconds" subject="subject_show_seconds" />
+			<toggle_chip text="Date" subject="subject_show_date" />
+		</row>
+
+		<!-- Done: back to the picker -->
+		<box name="done_btn" align="bottom_mid" y="-28">
+			<style name="style_done" />
+			<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+			<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+			<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+			<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+			<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+			<style name="style_done" />
+			<lv_label text="Done" align="center" style_text_font="font_watch_caption" />
+			<event_cb callback="watch_on_face_edit_done" trigger="clicked" />
+		</box>
+	</view>
+</screen>

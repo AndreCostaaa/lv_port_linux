@@ -1,0 +1,24 @@
+<!-- HOME: the watch. The active face, with the quick-settings shade
+     parked above it. Gestures and long-press go to watch_callbacks.c. -->
+<screen permanent="true">
+	<!-- Shade slide; watch_nav_shade_open() plays it forward / reversed -->
+	<animations>
+		<timeline name="shade_slide">
+			<animation target="shade" prop="translate_y" start="-466" end="0" duration="320" />
+		</timeline>
+	</animations>
+
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_home_gesture" trigger="gesture" />
+
+		<!-- The active watch face -->
+		<face_stack name="faces" align="center" subject="subject_active_face">
+			<event_cb callback="watch_on_face_pressed" trigger="pressed" />
+			<event_cb callback="watch_on_face_long_press" trigger="long_pressed" />
+		</face_stack>
+
+		<!-- Quick-settings shade, parked above the screen -->
+		<shade_panel name="shade" style_translate_y="-466" />
+	</view>
+</screen>

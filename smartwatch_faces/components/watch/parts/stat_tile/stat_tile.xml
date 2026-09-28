@@ -1,0 +1,30 @@
+<component>
+	<previews>
+		<preview name="default" width="180" height="90" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="icon" type="image" default="icon_heart_24" help="24 px icon" />
+		<prop name="color" type="color" default="#color_heart" help="Icon and bar color" />
+		<prop name="subject" type="subject" default="subject_heart_rate" help="Int subject shown as value and bar" />
+		<prop name="fmt" type="string" default="%d" help="printf format of the value" />
+		<prop name="min" type="int" default="0" help="Value of an empty bar" />
+		<prop name="max" type="int" default="100" help="Value of a full bar" />
+	</api>
+
+	<styles>
+		<style name="style_tile" width="140" height="58" radius="16" />
+	</styles>
+
+	<!-- Compact complication: icon + value on top, a mini bar below -->
+	<!-- pad/gap are passed to column: its local padding beats a style -->
+	<view extends="column" pad="10" gap="6" vertical_align="center" content_align="start">
+		<style name="style_surface" />
+		<style name="style_tile" />
+		<row gap="8" vertical_align="center">
+			<icon src="$icon" color="$color" />
+			<lv_label bind_text="$subject" bind_text-fmt="$fmt" style_text_font="font_watch_body" />
+		</row>
+		<mini_bar subject="$subject" min="$min" max="$max" style_bg_color-indicator="$color" />
+	</view>
+</component>

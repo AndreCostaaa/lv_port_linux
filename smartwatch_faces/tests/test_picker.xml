@@ -1,0 +1,8 @@
+<!-- The naive face picker: blurred live background + live face cards -->
+<test>
+	<view extends="screen_picker" />
+	<steps>
+		<wait ms="100" />
+		<screenshot_compare path="screen_picker.png" />
+	</steps>
+</test>

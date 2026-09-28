@@ -1,0 +1,29 @@
+<!-- WORKOUT app (placeholder): an outdoor run in progress -->
+<screen permanent="true">
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<app_header icon="icon_activity_48" color="#color_exercise" title="Outdoor run" />
+
+		<row align="center" y="-40" gap="10" vertical_align="center">
+			<lv_label text="5.24" style_text_font="font_watch_value" />
+			<lv_label text="KM" style_text_color="#color_exercise" style_text_font="font_watch_caption" />
+		</row>
+		<lv_label text="32:10" align="center" y="30" style_text_font="font_watch_title" />
+		<row align="center" y="100" gap="36">
+			<column horizontal_align="center">
+				<lv_label text="6'08&quot;" style_text_font="font_watch_body" />
+				<lv_label text="PACE">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			<column horizontal_align="center">
+				<lv_label bind_text="subject_heart_rate" bind_text-fmt="%d" style_text_font="font_watch_body" />
+				<lv_label text="BPM">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+		</row>
+	</view>
+</screen>

@@ -1,0 +1,86 @@
+<component>
+	<!-- Info face: time, date, current weather, an hourly forecast strip,
+	     the next calendar event and battery / steps bars. -->
+	<styles>
+		<style name="style_digits" text_font="font_watch_digits_md" />
+		<style name="style_pill" width="296" height="46" radius="#radius_round" />
+		<style name="style_pill_bar" width="4" height="22" radius="2" bg_opa="100%" />
+		<style name="style_bar_row" width="132" />
+	</styles>
+
+	<view extends="box" scrollable="false">
+		<style name="style_face" />
+
+		<!-- Date -->
+		<row align="top_mid" y="44" gap="8">
+			<accent_label bind_text="subject_weekday" style_text_font="font_watch_caption" />
+			<lv_label bind_text="subject_day" bind_text-fmt="%d" style_text_font="font_watch_caption" />
+			<lv_label bind_text="subject_month" style_text_font="font_watch_caption" style_text_color="#color_text_muted" />
+		</row>
+
+		<!-- Time -->
+		<row align="top_mid" y="66" vertical_align="center">
+			<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label text=":" style_text_color="#color_text_muted">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label bind_text="subject_minute" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+		</row>
+
+		<!-- Current weather -->
+		<row align="top_mid" y="164" gap="12" vertical_align="center">
+			<icon src="icon_cloud_sun_48" color="#color_weather" />
+			<lv_label bind_text="subject_temp" bind_text-fmt="%d°">
+				<style name="style_value" />
+			</lv_label>
+			<column gap="2">
+				<lv_label text="Partly cloudy" style_text_font="font_watch_caption" />
+				<lv_label text="H 24°  L 14°">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+		</row>
+
+		<!-- Hourly forecast -->
+		<row align="top_mid" y="226" gap="12">
+			<forecast_slot time="11" icon="icon_sun_24" temp="22°" />
+			<forecast_slot time="12" icon="icon_cloud_sun_24" temp="23°" />
+			<forecast_slot time="13" icon="icon_cloud_24" temp="22°" />
+			<forecast_slot time="14" icon="icon_cloud_rain_24" temp="19°" />
+		</row>
+
+		<!-- Next event -->
+		<row align="top_mid" y="316" gap="10" vertical_align="center" content_align="center" style_pad_hor="16">
+			<style name="style_surface" />
+			<style name="style_pill" />
+			<box>
+				<style name="style_pill_bar" />
+				<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+				<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+				<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+				<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+				<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+			</box>
+			<icon src="icon_calendar_24" color="#color_text_muted" />
+			<lv_label text="Stand-up · 10:30" style_text_font="font_watch_caption" />
+		</row>
+
+		<!-- Battery and steps -->
+		<row align="top_mid" y="380" gap="16">
+			<row gap="8" vertical_align="center">
+				<style name="style_bar_row" />
+				<icon src="icon_battery_24" color="#color_stand" />
+				<mini_bar subject="subject_battery" flex_grow="1" style_bg_color-indicator="#color_stand" />
+			</row>
+			<row gap="8" vertical_align="center">
+				<style name="style_bar_row" />
+				<icon src="icon_footprints_24" color="#color_exercise" />
+				<mini_bar subject="subject_steps" max="10000" flex_grow="1" style_bg_color-indicator="#color_exercise" />
+			</row>
+		</row>
+	</view>
+</component>

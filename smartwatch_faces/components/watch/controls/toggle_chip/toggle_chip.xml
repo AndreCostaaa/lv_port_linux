@@ -1,0 +1,39 @@
+<component>
+	<previews>
+		<preview name="default" width="160" height="70" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="text" type="string" default="Seconds" help="Chip caption" />
+		<prop name="subject" type="subject" default="subject_show_seconds" help="0/1 subject toggled on tap" />
+	</api>
+
+	<styles>
+		<style name="style_chip" width="140" height="48" />
+		<style name="style_dot_ring" width="20" height="20" radius="#radius_round" border_width="2" border_color="#color_text_muted" />
+		<style name="style_dot" width="10" height="10" radius="#radius_round" bg_opa="100%" />
+	</styles>
+
+	<!-- Pill toggle for face options: a radio-style dot (accent when on)
+	     and a caption. -->
+	<view extends="row" gap="10" vertical_align="center" horizontal_align="center" content_align="center" scrollable="false">
+		<style name="style_round_button" />
+		<style name="style_chip" />
+		<style name="style_round_button_pressed" selector="pressed" />
+		<subject_toggle_event subject="$subject" trigger="clicked" />
+
+		<box clickable="false">
+			<style name="style_dot_ring" />
+			<box align="center">
+				<style name="style_dot" />
+				<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+				<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+				<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+				<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+				<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+				<bind_flag_if_eq subject="$subject" flag="hidden" ref_value="0" />
+			</box>
+		</box>
+		<lv_label text="$text" style_text_font="font_watch_caption" />
+	</view>
+</component>

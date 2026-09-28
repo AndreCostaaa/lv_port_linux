@@ -18,6 +18,9 @@
     #include <lv_demo_truck.h>
 #endif /*CONFIG_LV_USE_DEMO_TRUCK*/
 
+#ifdef CONFIG_LV_USE_DEMO_WATCH
+    #include <lv_demo_watch.h>
+#endif /*CONFIG_LV_USE_DEMO_WATCH*/
 #include "lib/driver_backends.h"
 #include "lib/simulator_util.h"
 #include "lib/simulator_settings.h"
@@ -175,7 +178,9 @@ int main(int argc, char ** argv)
     }
 #endif
 
-#ifdef CONFIG_LV_USE_DEMO_TRUCK
+#ifdef CONFIG_LV_USE_DEMO_WATCH
+    lv_demo_watch();
+#elif defined(CONFIG_LV_USE_DEMO_TRUCK)
     const char * assets_path = getenv("LV_LINUX_3D_PATH");
     if(!assets_path) {
         assets_path = "3d";

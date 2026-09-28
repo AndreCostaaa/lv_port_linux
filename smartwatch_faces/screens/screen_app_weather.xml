@@ -1,0 +1,32 @@
+<!-- WEATHER app: current conditions and a 5-day forecast -->
+<screen permanent="true">
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<app_header icon="icon_cloud_sun_24" color="#color_weather" title="Budapest" />
+
+		<!-- Now -->
+		<row align="top_mid" y="66" gap="14" vertical_align="center">
+			<icon src="icon_cloud_sun_48" color="#color_weather" />
+			<lv_label bind_text="subject_temp" bind_text-fmt="%d°">
+				<style name="style_value" />
+			</lv_label>
+			<column gap="2">
+				<lv_label text="Partly cloudy" style_text_font="font_watch_caption" />
+				<lv_label text="H 24°  L 14°">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+		</row>
+
+		<!-- Next five days -->
+		<column align="top_mid" y="150" gap="8">
+			<forecast_row day="TUE" icon="icon_sun_24" low="14" high="25" low_text="14°" high_text="25°" />
+			<forecast_row day="WED" icon="icon_cloud_sun_24" low="13" high="22" low_text="13°" high_text="22°" />
+			<forecast_row day="THU" icon="icon_cloud_rain_24" low="11" high="17" low_text="11°" high_text="17°" />
+			<forecast_row day="FRI" icon="icon_cloud_24" low="10" high="19" low_text="10°" high_text="19°" />
+			<forecast_row day="SAT" icon="icon_sun_24" low="12" high="23" low_text="12°" high_text="23°" />
+		</column>
+	</view>
+</screen>

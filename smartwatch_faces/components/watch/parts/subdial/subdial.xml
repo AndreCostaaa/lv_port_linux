@@ -1,0 +1,59 @@
+<component>
+	<previews>
+		<preview name="default" width="140" height="140" style_bg_color="0x0D1B2A" />
+	</previews>
+
+	<api>
+		<prop name="title" type="string" default="BATT" help="Caption under the value" />
+		<prop name="subject" type="subject" default="subject_battery" help="Int subject shown by the gauge and the value" />
+		<prop name="max" type="int" default="100" help="Value at the end of the gauge" />
+		<prop name="fmt" type="string" default="%d%%" help="printf format of the value readout" />
+	</api>
+
+	<consts>
+		<int name="size" value="104" help="Diameter of the sub-dial" />
+		<color name="dial" value="0x0A1422" help="Recessed sub-dial background" />
+		<color name="rim" value="0x2C3E57" help="Sub-dial rim" />
+	</consts>
+
+	<styles>
+		<style name="style_subdial" width="#size" height="#size" radius="#radius_round" bg_color="#dial" bg_opa="100%" border_width="2" border_color="#rim" />
+		<style name="style_ticks_main" arc_opa="0%" />
+		<style name="style_ticks_minor" length="4" line_width="1" line_color="#color_text_muted" />
+		<style name="style_ticks_major" length="8" line_width="2" line_color="#color_text" />
+	</styles>
+
+	<!-- Recessed 270 deg gauge with a tick scale, used for complications on
+	     analog faces. The gauge arc follows the accent unless overridden. -->
+	<view extends="box">
+		<style name="style_subdial" />
+
+		<!-- Tick scale around the gauge -->
+		<lv_scale
+			width="92"
+			height="92"
+			align="center"
+			mode="round_inner"
+			total_tick_count="11"
+			major_tick_every="5"
+			min_value="0"
+			max_value="10"
+			angle_range="270"
+			rotation="135"
+			label_show="false"
+			clickable="false"
+		>
+			<style name="style_ticks_main" />
+			<style name="style_ticks_minor" selector="items" />
+			<style name="style_ticks_major" selector="indicator" />
+		</lv_scale>
+
+		<ring name="gauge" size="70" thickness="5" max="$max" subject="$subject" bg_start="135" bg_end="45" rotation="0" />
+
+		<!-- Readout -->
+		<lv_label align="center" y="-6" bind_text="$subject" bind_text-fmt="$fmt" style_text_font="font_watch_body" />
+		<lv_label align="center" y="30" text="$title">
+			<style name="style_caption" />
+		</lv_label>
+	</view>
+</component>

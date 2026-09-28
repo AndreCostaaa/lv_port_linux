@@ -1,0 +1,7 @@
+<component>
+	<!-- Theme-free box with no layout: children are placed with
+	     align/x/y. Extends the template's base_box (the project's single
+	     <remove_style_all/>), so locals set here and at the use site stick.
+	     Watch faces are built from these because a dial is positional. -->
+	<view extends="base_box" style_layout="none" />
+</component>

@@ -1,0 +1,64 @@
+<component>
+	<!-- Light, quiet analog face: cream gradient, 12 thin indices, two
+	     dark hands and an accent seconds hand. The contrast face of the
+	     set. -->
+	<consts>
+		<color name="ink" value="0x1C1C1F" help="Hand and index color on the light dial" />
+		<color name="ink_muted" value="0x7C766C" help="Secondary text on the light dial" />
+	</consts>
+
+	<styles>
+		<style name="style_dial" bg_color="0xF6F2EA" bg_grad_color="0xD9D1C3" bg_grad_dir="ver" text_color="#ink" />
+		<!-- Scale: no ring, only the 12 indices -->
+		<style name="style_scale_main" arc_opa="0%" />
+		<style name="style_scale_index" length="24" line_width="3" line_color="#ink" />
+	</styles>
+
+	<view extends="box" scrollable="false">
+		<style name="style_face" />
+		<style name="style_dial" />
+
+		<!-- 12 index lines -->
+		<lv_scale
+			width="424"
+			height="424"
+			align="center"
+			mode="round_inner"
+			total_tick_count="12"
+			major_tick_every="1"
+			min_value="0"
+			max_value="11"
+			angle_range="330"
+			rotation="270"
+			label_show="false"
+			clickable="false"
+		>
+			<style name="style_scale_main" />
+			<style name="style_scale_index" selector="indicator" />
+		</lv_scale>
+
+		<!-- Wordmark and date -->
+		<lv_label text="LVGL" align="center" y="-92" style_text_letter_space="4" style_text_color="#ink_muted">
+			<style name="style_caption" />
+		</lv_label>
+		<lv_label align="center" y="96" bind_text="subject_day" bind_text-fmt="%d" style_text_color="#ink">
+			<style name="style_caption" />
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+		</lv_label>
+
+		<!-- Hands, posed at 10:09:30 -->
+		<hand name="hand_hour" w="10" h="132" pivot_x="5" pivot_y="116" offset="-50" style_bg_color="#ink" angle="3047" />
+		<hand name="hand_min" w="6" h="196" pivot_x="3" pivot_y="180" offset="-82" style_bg_color="#ink" angle="570" />
+		<hand name="hand_sec" w="3" h="232" pivot_x="1" pivot_y="192" offset="-76" angle="1800">
+			<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+			<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+			<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+			<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+			<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+
+		<!-- Centre cap -->
+		<box width="14" height="14" align="center" style_radius="#radius_round" style_bg_color="#ink" style_bg_opa="100%" />
+	</view>
+</component>

@@ -1,0 +1,7 @@
+<!-- face_chrono at the demo's reference time, 10:09:30 (the subject defaults) -->
+<test width="466" height="466">
+	<view extends="face_chrono" />
+	<steps>
+		<screenshot_compare path="face_chrono.png" />
+	</steps>
+</test>

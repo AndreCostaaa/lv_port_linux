@@ -1,0 +1,11 @@
+<component>
+	<!-- A label whose text follows the accent color (subject_accent).
+	     All lv_label props (text, bind_text, fonts, ...) work at the use site. -->
+	<view extends="lv_label">
+		<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+		<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+		<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+		<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+		<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+	</view>
+</component>

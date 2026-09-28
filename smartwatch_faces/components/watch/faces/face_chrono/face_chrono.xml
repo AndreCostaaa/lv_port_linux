@@ -1,0 +1,288 @@
+<component>
+	<!-- Chronograph face, the heaviest of the set: a tachymeter bezel
+	     with rotated labels, a 1/5 s track, applied hour batons, three
+	     sub-dials (running seconds, 30-min and 12-hour counters) and
+	     skeleton hands. The chronograph itself is at rest: its hands
+	     (chrono_*) are static; the small seconds hand (hand_sec) runs. -->
+	<consts>
+		<color name="dial_top" value="0x2E3034" help="Dial gradient, top" />
+		<color name="dial_bottom" value="0x0C0D0F" help="Dial gradient, bottom" />
+		<color name="band" value="0x131416" help="Tachymeter band" />
+		<color name="steel" value="0xD9DCE1" help="Hands, batons and numerals" />
+		<color name="lume" value="0xF3EFD8" help="Luminous inserts" />
+	</consts>
+
+	<styles>
+		<style name="style_dial" bg_color="#dial_top" bg_grad_color="#dial_bottom" bg_grad_dir="ver" border_width="44" border_color="#band" />
+		<style name="style_tachy_label" width="44" height="20" transform_pivot_x="22" transform_pivot_y="10" text_align="center" text_font="font_body" text_color="#steel" />
+		<style name="style_tachy_tick" width="2" height="10" transform_pivot_x="1" transform_pivot_y="5" bg_color="#steel" bg_opa="100%" />
+		<style name="style_track_main" arc_opa="0%" />
+		<style name="style_track_minor" length="5" line_width="1" line_color="0x7A7D83" />
+		<style name="style_track_major" length="12" line_width="2" line_color="#steel" />
+		<style name="style_baton" width="10" height="36" transform_pivot_x="5" transform_pivot_y="18" radius="2" bg_color="#steel" bg_opa="100%" />
+		<style name="style_baton_lume" width="4" height="22" radius="2" bg_color="#lume" bg_opa="100%" />
+		<style name="style_sub" width="124" height="124" radius="#radius_round" bg_color="0x151619" bg_opa="100%" border_width="1" border_color="0x3C3F44" />
+		<style name="style_sub_main" arc_opa="0%" />
+		<style name="style_sub_minor" length="4" line_width="1" line_color="0x8A8D93" />
+		<style name="style_sub_major" length="8" line_width="2" line_color="#steel" text_font="font_body" text_color="#steel" pad_radial="4" />
+		<style name="style_cap" radius="#radius_round" bg_color="#steel" bg_opa="100%" />
+	</styles>
+
+	<view extends="box" scrollable="false">
+		<style name="style_face" />
+		<style name="style_dial" />
+
+		<!-- Tachymeter bezel: marks and rotated values (3600 / t) -->
+		<box align="center" x="134" y="-143" style_transform_rotation="432">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="159" y="-115" style_transform_rotation="540">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="186" y="-61" style_transform_rotation="720">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="196" y="-12" style_transform_rotation="864">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="186" y="61" style_transform_rotation="1080">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="170" y="98" style_transform_rotation="1200">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="139" y="139" style_transform_rotation="1350">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="85" y="177" style_transform_rotation="1543">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="0" y="196" style_transform_rotation="1800">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-55" y="188" style_transform_rotation="1964">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-115" y="159" style_transform_rotation="2160">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-170" y="98" style_transform_rotation="2400">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-196" y="0" style_transform_rotation="2700">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-186" y="-61" style_transform_rotation="2880">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-153" y="-122" style_transform_rotation="3086">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="-91" y="-174" style_transform_rotation="3323">
+			<style name="style_tachy_tick" />
+		</box>
+		<box align="center" x="0" y="-196" style_transform_rotation="3600">
+			<style name="style_tachy_tick" />
+		</box>
+		<lv_label text="500" align="center" x="144" y="-154" style_transform_rotation="432">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="400" align="center" x="171" y="-124" style_transform_rotation="540">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="300" align="center" x="201" y="-65" style_transform_rotation="720">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="250" align="center" x="211" y="-13" style_transform_rotation="864">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="200" align="center" x="201" y="65" style_transform_rotation="-720">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="180" align="center" x="183" y="105" style_transform_rotation="-600">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="160" align="center" x="149" y="149" style_transform_rotation="-450">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="140" align="center" x="92" y="190" style_transform_rotation="-257">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="120" align="center" x="0" y="211" style_transform_rotation="0">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="110" align="center" x="-59" y="202" style_transform_rotation="164">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="100" align="center" x="-124" y="171" style_transform_rotation="360">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="90" align="center" x="-183" y="106" style_transform_rotation="600">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="80" align="center" x="-211" y="0" style_transform_rotation="2700">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="75" align="center" x="-201" y="-65" style_transform_rotation="2880">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="70" align="center" x="-165" y="-132" style_transform_rotation="3086">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="65" align="center" x="-98" y="-187" style_transform_rotation="3323">
+			<style name="style_tachy_label" />
+		</lv_label>
+		<lv_label text="60" align="center" x="0" y="-211" style_transform_rotation="3600">
+			<style name="style_tachy_label" />
+		</lv_label>
+
+		<!-- 1/5 s chronograph track -->
+		<lv_scale
+			width="374"
+			height="374"
+			align="center"
+			mode="round_inner"
+			total_tick_count="300"
+			major_tick_every="5"
+			min_value="0"
+			max_value="299"
+			angle_range="359"
+			rotation="270"
+			label_show="false"
+			clickable="false"
+		>
+			<style name="style_track_main" />
+			<style name="style_track_minor" selector="items" />
+			<style name="style_track_major" selector="indicator" />
+		</lv_scale>
+
+		<!-- Applied hour batons (3, 6 and 9 make room for the sub-dials) -->
+		<box align="center" x="-7" y="-160" style_transform_rotation="0">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="7" y="-160" style_transform_rotation="0">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="80" y="-139" style_transform_rotation="300">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="139" y="-80" style_transform_rotation="600">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="139" y="80" style_transform_rotation="1200">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="80" y="139" style_transform_rotation="1500">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="-80" y="139" style_transform_rotation="2100">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="-139" y="80" style_transform_rotation="2400">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="-139" y="-80" style_transform_rotation="3000">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+		<box align="center" x="-80" y="-139" style_transform_rotation="3300">
+			<style name="style_baton" />
+			<box align="top_mid" y="4">
+				<style name="style_baton_lume" />
+			</box>
+		</box>
+
+		<!-- Wordmark -->
+		<lv_label text="LVGL" align="center" y="-112" style_text_font="font_watch_title" style_text_letter_space="4" style_text_color="#steel" />
+		<lv_label text="CHRONOGRAPH" align="center" y="-86" style_text_letter_space="2">
+			<style name="style_caption" />
+		</lv_label>
+
+		<!-- Sub-dial at 9: running small seconds -->
+		<box align="center" x="-98">
+			<style name="style_sub" />
+			<lv_scale width="116" height="116" align="center" mode="round_inner" total_tick_count="60" major_tick_every="15" min_value="0" max_value="59" angle_range="354" rotation="270" label_show="true" text_src="60 15 30 45" clickable="false">
+				<style name="style_sub_main" />
+				<style name="style_sub_minor" selector="items" />
+				<style name="style_sub_major" selector="indicator" />
+			</lv_scale>
+			<hand name="hand_sec" w="3" h="60" pivot_x="1" pivot_y="50" offset="-20" angle="1800" style_bg_color="#steel">
+				<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+			</hand>
+			<box width="10" height="10" align="center">
+				<style name="style_cap" />
+			</box>
+		</box>
+
+		<!-- Sub-dial at 3: 30-minute counter (at rest) -->
+		<box align="center" x="98">
+			<style name="style_sub" />
+			<lv_scale width="116" height="116" align="center" mode="round_inner" total_tick_count="30" major_tick_every="10" min_value="0" max_value="29" angle_range="348" rotation="270" label_show="true" text_src="30 10 20" clickable="false">
+				<style name="style_sub_main" />
+				<style name="style_sub_minor" selector="items" />
+				<style name="style_sub_major" selector="indicator" />
+			</lv_scale>
+			<hand name="chrono_min" w="3" h="60" pivot_x="1" pivot_y="50" offset="-20" angle="0" />
+			<box width="10" height="10" align="center">
+				<style name="style_cap" />
+			</box>
+		</box>
+
+		<!-- Sub-dial at 6: 12-hour counter (at rest) -->
+		<box align="center" y="98">
+			<style name="style_sub" />
+			<lv_scale width="116" height="116" align="center" mode="round_inner" total_tick_count="12" major_tick_every="3" min_value="0" max_value="11" angle_range="330" rotation="270" label_show="true" text_src="12 3 6 9" clickable="false">
+				<style name="style_sub_main" />
+				<style name="style_sub_minor" selector="items" />
+				<style name="style_sub_major" selector="indicator" />
+			</lv_scale>
+			<hand name="chrono_hour" w="3" h="60" pivot_x="1" pivot_y="50" offset="-20" angle="0" />
+			<box width="10" height="10" align="center">
+				<style name="style_cap" />
+			</box>
+		</box>
+
+		<!-- Main hands, posed at 10:09 -->
+		<hand name="hand_hour" w="14" h="142" pivot_x="7" pivot_y="120" offset="-49" angle="3047" style_bg_color="#steel">
+			<box width="6" height="80" align="top_mid" y="10" style_radius="3" style_bg_color="#lume" style_bg_opa="100%" />
+		</hand>
+		<hand name="hand_min" w="10" h="200" pivot_x="5" pivot_y="176" offset="-76" angle="570" style_bg_color="#steel">
+			<box width="4" height="130" align="top_mid" y="10" style_radius="2" style_bg_color="#lume" style_bg_opa="100%" />
+		</hand>
+
+		<!-- Central chronograph seconds hand (accent, at rest on 12) -->
+		<hand name="chrono_sec" w="3" h="236" pivot_x="1" pivot_y="190" offset="-72" angle="0" />
+
+		<!-- Centre caps -->
+		<box width="20" height="20" align="center">
+			<style name="style_cap" />
+		</box>
+		<box width="8" height="8" align="center" style_radius="#radius_round" style_bg_color="0x111111" style_bg_opa="100%" />
+	</view>
+</component>

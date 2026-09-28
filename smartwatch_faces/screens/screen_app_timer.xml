@@ -1,0 +1,16 @@
+<!-- TIMER app (placeholder): a 5-minute timer -->
+<screen permanent="true">
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<ring size="400" thickness="14" subject="subject_timer_progress" max="100" style_arc_color="0xF08A24" style_arc_color-indicator="0xF08A24" />
+		<lv_label text="Timer" align="center" y="-70">
+			<style name="style_caption" />
+		</lv_label>
+		<lv_label text="05:00" align="center" style_text_font="font_watch_digits_md" />
+		<lv_label text="Tap to start" align="center" y="70">
+			<style name="style_caption" />
+		</lv_label>
+	</view>
+</screen>

@@ -1,0 +1,63 @@
+<!-- MUSIC app: album art, track, transport controls and a volume arc
+     around the edge. -->
+<screen permanent="true">
+	<styles>
+		<style name="style_art" width="150" height="150" radius="#radius_round" bg_color="0xFF4D8D" bg_grad_color="0x6C4DFF" bg_grad_dir="ver" bg_opa="100%" />
+		<style name="style_ctrl" width="60" height="60" />
+		<style name="style_play" width="80" height="80" radius="#radius_round" bg_opa="100%" />
+	</styles>
+
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<!-- Volume: the only draggable arc of the demo -->
+		<ring size="450" thickness="10" subject="subject_volume" bg_start="135" bg_end="45" rotation="0" clickable="true" style_bg_opa-knob="100%" style_bg_color-knob="#color_text" style_pad_all-knob="6" style_radius-knob="#radius_round" />
+		<icon src="icon_volume_32" align="bottom_mid" y="-24" color="#color_text_muted" />
+
+		<!-- Album art -->
+		<box align="center" y="-80">
+			<style name="style_art" />
+			<icon src="icon_music_48" align="center" style_image_opa="70%" />
+		</box>
+
+		<!-- Track -->
+		<lv_label text="Midnight City" align="center" y="20">
+			<style name="style_title" />
+		</lv_label>
+		<lv_label text="M83" align="center" y="52">
+			<style name="style_caption" />
+		</lv_label>
+
+		<!-- Transport -->
+		<row align="center" y="120" gap="22" vertical_align="center">
+			<box name="music_prev">
+				<style name="style_round_button" />
+				<style name="style_ctrl" />
+				<style name="style_round_button_pressed" selector="pressed" />
+				<icon src="icon_skip_back_32" align="center" />
+			</box>
+			<box name="music_play">
+				<style name="style_play" />
+				<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+				<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+				<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+				<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+				<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+				<subject_toggle_event subject="subject_music_playing" trigger="clicked" />
+				<icon src="icon_play_32" align="center" color="#color_bg">
+					<bind_flag_if_eq subject="subject_music_playing" flag="hidden" ref_value="1" />
+				</icon>
+				<icon src="icon_pause_32" align="center" color="#color_bg">
+					<bind_flag_if_eq subject="subject_music_playing" flag="hidden" ref_value="0" />
+				</icon>
+			</box>
+			<box name="music_next">
+				<style name="style_round_button" />
+				<style name="style_ctrl" />
+				<style name="style_round_button_pressed" selector="pressed" />
+				<icon src="icon_skip_forward_32" align="center" />
+			</box>
+		</row>
+	</view>
+</screen>

@@ -1,0 +1,23 @@
+<component>
+	<previews>
+		<preview name="default" width="320" height="80" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="title" type="string" default="Vibration" help="Setting name" />
+		<prop name="value" type="string" default="Strong" help="Current value shown on the right" />
+	</api>
+
+	<!-- Settings list row with a value and a chevron. The row's size and
+	     paddings are locals because row/container own them locally. -->
+	<view extends="row" gap="8" vertical_align="center" content_align="center" width="304" height="64" style_pad_hor="20">
+		<style name="style_surface" />
+		<style name="style_round_button" />
+		<style name="style_pressed" selector="pressed" />
+		<lv_label text="$title" flex_grow="1" />
+		<lv_label text="$value">
+			<style name="style_caption" />
+		</lv_label>
+		<icon src="icon_chevron_right_24" color="#color_text_muted" />
+	</view>
+</component>

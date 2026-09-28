@@ -3,3 +3,7 @@ rsource "lvgl/Kconfig"
 config LV_USE_DEMO_TRUCK
 	bool "3D Truck Demo"
 	depends on LV_USE_GLTF
+
+config LV_USE_DEMO_WATCH
+	bool "Smartwatch snapshot demo"
+	depends on LV_USE_SNAPSHOT

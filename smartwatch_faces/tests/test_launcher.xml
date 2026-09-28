@@ -1,0 +1,7 @@
+<!-- Launcher app list -->
+<test>
+	<view extends="screen_launcher" />
+	<steps>
+		<screenshot_compare path="screen_launcher.png" />
+	</steps>
+</test>

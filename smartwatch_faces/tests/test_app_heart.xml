@@ -1,0 +1,7 @@
+<!-- Heart-rate app with its seeded chart -->
+<test>
+	<view extends="screen_app_heart" />
+	<steps>
+		<screenshot_compare path="screen_app_heart.png" />
+	</steps>
+</test>

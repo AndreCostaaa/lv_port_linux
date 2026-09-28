@@ -1,0 +1,106 @@
+<component>
+	<!-- Classic analog face: navy sunburst-style dial, Roman numerals on
+	     a railroad minute track, battery and steps sub-dials, a date
+	     window and lumed hands. -->
+	<consts>
+		<color name="dial_top" value="0x13263D" help="Dial gradient, top" />
+		<color name="dial_bottom" value="0x050A12" help="Dial gradient, bottom" />
+		<color name="bezel" value="0x2A3B52" help="Inner bezel ring" />
+		<color name="minor_tick" value="0x6F819C" help="Minute ticks" />
+		<color name="hand" value="0xF1F4F8" help="Hour and minute hand" />
+		<color name="lume" value="0xDDF5C4" help="Luminous strips on the hands" />
+	</consts>
+
+	<styles>
+		<style name="style_dial" bg_color="#dial_top" bg_grad_color="#dial_bottom" bg_grad_dir="ver" border_width="5" border_color="#bezel" />
+		<style name="style_track_main" arc_opa="0%" />
+		<style name="style_track_minor" length="10" line_width="2" line_color="#minor_tick" />
+		<style name="style_track_major" length="24" line_width="6" line_color="#color_text" text_font="font_watch_title" text_color="0xE9EDF3" pad_radial="8" />
+		<style name="style_fine_track_main" arc_opa="0%" />
+		<style name="style_fine_track_minor" length="4" line_width="1" line_color="#minor_tick" />
+		<style name="style_date" bg_color="0xF4F1EA" bg_opa="100%" radius="6" text_color="0x111111" text_font="font_watch_caption" />
+		<style name="style_lume" radius="#radius_round" bg_color="#lume" bg_opa="100%" />
+	</styles>
+
+	<view extends="box" scrollable="false">
+		<style name="style_face" />
+		<style name="style_dial" />
+
+		<!-- Fine 1/4-minute track at the very edge -->
+		<lv_scale
+			width="446"
+			height="446"
+			align="center"
+			mode="round_inner"
+			total_tick_count="240"
+			major_tick_every="0"
+			min_value="0"
+			max_value="239"
+			angle_range="359"
+			rotation="270"
+			label_show="false"
+			clickable="false"
+		>
+			<style name="style_fine_track_main" />
+			<style name="style_fine_track_minor" selector="items" />
+		</lv_scale>
+
+		<!-- Minute track with Roman hour numerals -->
+		<lv_scale
+			width="424"
+			height="424"
+			align="center"
+			mode="round_inner"
+			total_tick_count="60"
+			major_tick_every="5"
+			min_value="0"
+			max_value="59"
+			angle_range="354"
+			rotation="270"
+			label_show="true"
+			text_src="XII I II III IIII V VI VII VIII IX X XI"
+			clickable="false"
+		>
+			<style name="style_track_main" />
+			<style name="style_track_minor" selector="items" />
+			<style name="style_track_major" selector="indicator" />
+		</lv_scale>
+
+		<!-- Wordmark -->
+		<lv_label text="LVGL" align="center" y="-96" style_text_font="font_watch_title" style_text_letter_space="4" />
+		<lv_label text="AUTOMATIC" align="center" y="-66" style_text_letter_space="3">
+			<style name="style_caption" />
+		</lv_label>
+
+		<!-- Sub-dials at 9 and 3 o'clock -->
+		<subdial align="center" x="-86" title="BATT" subject="subject_battery" max="100" fmt="%d%%" />
+		<subdial align="center" x="86" title="STEPS" subject="subject_steps" max="10000" fmt="%d" />
+
+		<!-- Date window at 6 o'clock -->
+		<row align="center" y="104" pad="6" gap="6" vertical_align="center">
+			<style name="style_date" />
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+			<lv_label bind_text="subject_weekday" style_text_color="0x6A6A6A" />
+			<lv_label bind_text="subject_day" bind_text-fmt="%d" />
+		</row>
+
+		<!-- Hands, posed at 10:09:30 -->
+		<hand name="hand_hour" w="14" h="150" pivot_x="7" pivot_y="128" offset="-53" angle="3047" style_bg_color="#hand">
+			<box width="6" height="84" align="top_mid" y="12">
+				<style name="style_lume" />
+			</box>
+		</hand>
+		<hand name="hand_min" w="10" h="210" pivot_x="5" pivot_y="186" offset="-81" angle="570" style_bg_color="#hand">
+			<box width="4" height="136" align="top_mid" y="12">
+				<style name="style_lume" />
+			</box>
+		</hand>
+		<hand name="hand_sec" w="4" h="238" pivot_x="2" pivot_y="196" offset="-77" angle="1800">
+			<bind_flag_if_eq subject="subject_show_seconds" flag="hidden" ref_value="0" />
+		</hand>
+
+		<!-- Centre caps -->
+		<box width="22" height="22" align="center" style_radius="#radius_round" style_bg_color="#hand" style_bg_opa="100%" />
+		<box width="8" height="8" align="center" style_radius="#radius_round" style_bg_color="0x111111" style_bg_opa="100%" />
+	</view>
+</component>

@@ -1,0 +1,30 @@
+<!-- SETTINGS app: a flat scrolling list (edge scaling is phase 2) -->
+<screen permanent="true">
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<column
+			name="settings_list"
+			width="100%"
+			height="100%"
+			gap="8"
+			horizontal_align="center"
+			content_align="center"
+			scrollbar_mode="off"
+			style_pad_top="36"
+			style_pad_bottom="80"
+		>
+			<!-- The title is the first list item so rows never slide under it -->
+			<app_header icon="icon_settings_24" color="#color_text_muted" title="Settings" snappable="false" />
+			<setting_switch_row title="Wi-Fi" subject="subject_wifi" />
+			<setting_switch_row title="Bluetooth" subject="subject_bt" />
+			<setting_switch_row title="Do not disturb" subject="subject_dnd" />
+			<setting_row title="Brightness" value="Auto" />
+			<setting_row title="Watch face" value="Edit" />
+			<setting_row title="Vibration" value="Strong" />
+			<setting_row title="Battery" value="Saver off" />
+			<setting_row title="About" value="LVGL 10" />
+		</column>
+	</view>
+</screen>

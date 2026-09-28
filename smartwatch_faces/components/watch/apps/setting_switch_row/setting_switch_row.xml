@@ -1,0 +1,36 @@
+<component>
+	<previews>
+		<preview name="default" width="320" height="80" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="title" type="string" default="Wi-Fi" help="Setting name" />
+		<prop name="subject" type="subject" default="subject_wifi" help="0/1 subject bound two-way to the switch" />
+	</api>
+
+	<styles>
+		<style name="style_switch" width="58" height="32" radius="#radius_round" bg_color="#color_text_muted" bg_opa="35%" />
+		<style name="style_switch_ind" radius="#radius_round" />
+		<style name="style_switch_ind_on" bg_opa="100%" />
+		<style name="style_switch_knob" radius="#radius_round" bg_color="#color_text" bg_opa="100%" pad_all="-4" />
+	</styles>
+
+	<!-- Settings list row with a switch bound to a 0/1 subject; the
+	     switch fills with the accent while checked. -->
+	<view extends="row" gap="8" vertical_align="center" content_align="center" width="304" height="64" style_pad_hor="20" clickable="false">
+		<style name="style_surface" />
+		<style name="style_round_button" />
+		<lv_label text="$title" flex_grow="1" />
+		<lv_switch bind_checked="$subject">
+			<style name="style_switch" />
+			<style name="style_switch_ind" selector="indicator" />
+			<style name="style_switch_ind_on" selector="indicator|checked" />
+			<style name="style_switch_knob" selector="knob" />
+			<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" selector="indicator|checked" />
+			<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" selector="indicator|checked" />
+			<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" selector="indicator|checked" />
+			<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" selector="indicator|checked" />
+			<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" selector="indicator|checked" />
+		</lv_switch>
+	</view>
+</component>

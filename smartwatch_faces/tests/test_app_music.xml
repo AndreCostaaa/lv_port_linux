@@ -1,0 +1,12 @@
+<!-- Music app: play toggles subject_music_playing and swaps the icon -->
+<test>
+	<view extends="screen_app_music" />
+	<steps>
+		<screenshot_compare path="screen_app_music.png" />
+		<click_on name="music_play" />
+		<subject_compare subject="subject_music_playing" value="1" />
+		<screenshot_compare path="screen_app_music_playing.png" />
+		<!-- Tests share subjects: restore the default -->
+		<subject_set subject="subject_music_playing" value="0" />
+	</steps>
+</test>

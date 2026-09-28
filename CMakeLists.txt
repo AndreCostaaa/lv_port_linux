@@ -48,6 +48,14 @@ if(CONFIG_LV_USE_DEMO_TRUCK)
     set(EXTRA_LIBS lv_demo_truck_ui)
 endif()
 
+if(CONFIG_LV_USE_DEMO_WATCH)
+    set(LVGL_COMPONENT_LIB_NAME lv_demo_watch_ui)
+    add_subdirectory(smartwatch_faces)
+    target_compile_definitions(lv_demo_watch_ui PUBLIC LV_LVGL_H_INCLUDE_SIMPLE)
+    target_compile_definitions(lv_demo_watch_ui_user PUBLIC LV_LVGL_H_INCLUDE_SIMPLE)
+    list(APPEND EXTRA_LIBS lv_demo_watch_ui)
+endif()
+
 file(GLOB LV_LINUX_SRC src/lib/*.c)
 set(LV_LINUX_INC src/lib)
 set_property(GLOBAL PROPERTY LV_LINUX_BACKEND_SRC "")
@@ -100,6 +108,10 @@ target_link_libraries(lvglsim PUBLIC lvgl_linux ${EXTRA_LIBS})
 
 if(CONFIG_LV_USE_DEMO_TRUCK)
     target_compile_definitions(lvglsim PUBLIC CONFIG_LV_USE_DEMO_TRUCK)
+endif()
+
+if(CONFIG_LV_USE_DEMO_WATCH)
+    target_compile_definitions(lvglsim PUBLIC CONFIG_LV_USE_DEMO_WATCH)
 endif()
 
 if(WERROR)

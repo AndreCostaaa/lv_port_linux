@@ -1,0 +1,53 @@
+<component>
+	<previews>
+		<preview name="default" width="240" height="240" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="size" type="int" default="200" help="Outer diameter of the ring" />
+		<prop name="thickness" type="int" default="16" help="Stroke width of the track and the indicator" />
+		<prop name="subject" type="subject" default="subject_move" help="Int subject shown by the ring" />
+		<prop name="min" type="int" default="0" help="Value at the start of the ring" />
+		<prop name="max" type="int" default="100" help="Value at the end of the ring" />
+		<prop name="bg_start" type="int" default="0" help="Start angle of the track (after rotation)" />
+		<prop name="bg_end" type="int" default="360" help="End angle of the track (after rotation)" />
+		<prop name="rotation" type="int" default="270" help="Rotation of the whole ring; 270 starts at 12 o'clock" />
+	</api>
+
+	<!-- A read-only progress ring (activity rings, gauges, seconds arc).
+	     Track and indicator follow the accent color; override both at the
+	     use site with style_arc_color and style_arc_color-indicator. The
+	     track is the same color, dimmed. Not clickable, so it never steals
+	     gestures or gets dragged. -->
+	<view
+		extends="lv_arc"
+		width="$size"
+		height="$size"
+		align="center"
+		clickable="false"
+		bg_start_angle="$bg_start"
+		bg_end_angle="$bg_end"
+		rotation="$rotation"
+		min_value="$min"
+		max_value="$max"
+		bind_value="$subject"
+		style_pad_all="0"
+		style_arc_width="$thickness"
+		style_arc_opa="#opa_ring_track"
+		style_arc_width-indicator="$thickness"
+		style_arc_rounded-indicator="true"
+		style_bg_opa-knob="0%"
+		style_pad_all-knob="0"
+	>
+		<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" selector="main" />
+		<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" selector="main" />
+		<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" selector="main" />
+		<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" selector="main" />
+		<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" selector="main" />
+		<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" selector="indicator" />
+		<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" selector="indicator" />
+		<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" selector="indicator" />
+		<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" selector="indicator" />
+		<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" selector="indicator" />
+	</view>
+</component>

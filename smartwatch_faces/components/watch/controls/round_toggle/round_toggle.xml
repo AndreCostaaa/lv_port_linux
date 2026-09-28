@@ -1,0 +1,42 @@
+<component>
+	<previews>
+		<preview name="default" width="120" height="120" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="icon" type="image" default="icon_wifi_32" help="32 px icon" />
+		<prop name="subject" type="subject" default="subject_wifi" help="0/1 subject toggled on tap" />
+	</api>
+
+	<styles>
+		<style name="style_toggle" width="96" height="96" />
+		<style name="style_fill" width="100%" height="100%" radius="#radius_round" bg_opa="100%" />
+	</styles>
+
+	<!-- Round quick-settings toggle. Off: grey disc, white icon. On: the
+	     accent-colored fill shows and the icon turns black. -->
+	<view extends="box" scrollable="false">
+		<style name="style_round_button" />
+		<style name="style_toggle" />
+		<style name="style_round_button_pressed" selector="pressed" />
+		<subject_toggle_event subject="$subject" trigger="clicked" />
+
+		<!-- Accent fill, visible while on -->
+		<box clickable="false">
+			<style name="style_fill" />
+			<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+			<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+			<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+			<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+			<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+			<bind_flag_if_eq subject="$subject" flag="hidden" ref_value="0" />
+		</box>
+
+		<icon src="$icon" align="center" color="#color_text">
+			<bind_flag_if_eq subject="$subject" flag="hidden" ref_value="1" />
+		</icon>
+		<icon src="$icon" align="center" color="#color_bg">
+			<bind_flag_if_eq subject="$subject" flag="hidden" ref_value="0" />
+		</icon>
+	</view>
+</component>

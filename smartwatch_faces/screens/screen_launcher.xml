@@ -1,0 +1,33 @@
+<!-- LAUNCHER: Wear-style vertical app list. Swipe right to go home. -->
+<screen permanent="true">
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<column
+			name="app_list"
+			width="100%"
+			height="100%"
+			gap="16"
+			horizontal_align="center"
+			content_align="center"
+			scroll_snap_y="center"
+			scrollbar_mode="off"
+			style_pad_top="44"
+			style_pad_bottom="110"
+		>
+			<!-- Clock: first list item, so the apps never slide under it -->
+			<row clickable="false" snappable="false">
+				<lv_label bind_text="subject_hour" bind_text-fmt="%02d" style_text_font="font_watch_caption" />
+				<lv_label text=":" style_text_font="font_watch_caption" />
+				<lv_label bind_text="subject_minute" bind_text-fmt="%02d" style_text_font="font_watch_caption" />
+			</row>
+			<app_row id="heart" icon_name="app_icon_heart" title="Heart rate" icon="icon_heart_48" color="#color_heart" />
+			<app_row id="workout" icon_name="app_icon_workout" title="Workout" icon="icon_dumbbell_48" color="0x3FAF4A" />
+			<app_row id="weather" icon_name="app_icon_weather" title="Weather" icon="icon_cloud_sun_48" color="0x2F7DF6" />
+			<app_row id="music" icon_name="app_icon_music" title="Music" icon="icon_music_48" color="0xE0457B" />
+			<app_row id="timer" icon_name="app_icon_timer" title="Timer" icon="icon_timer_48" color="0xF08A24" />
+			<app_row id="settings" icon_name="app_icon_settings" title="Settings" icon="icon_settings_48" color="0x5B5B66" />
+		</column>
+	</view>
+</screen>

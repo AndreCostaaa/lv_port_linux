@@ -1,0 +1,8 @@
+<project lvgl_version="9.5.0" theme="simple">
+	<targets>
+		<!-- 466x466 round AMOLED smartwatch -->
+		<target name="target1">
+			<display width="466" height="466" />
+		</target>
+	</targets>
+</project>

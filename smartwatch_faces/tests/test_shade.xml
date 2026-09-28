@@ -1,0 +1,17 @@
+<!-- The shade in its open position over the classic face; toggling DND.
+     (On the device the shade is slid in by watch_nav_shade_open().) -->
+<test>
+	<view extends="lv_obj" width="100%" height="100%" scrollable="false">
+		<style name="style_watch_screen" />
+		<face_classic align="center" />
+		<shade_panel />
+	</view>
+	<steps>
+		<screenshot_compare path="shade_open.png" />
+		<click_on name="toggle_dnd" />
+		<subject_compare subject="subject_dnd" value="1" />
+		<screenshot_compare path="shade_dnd_on.png" />
+		<!-- Tests share subjects: restore the default -->
+		<subject_set subject="subject_dnd" value="0" />
+	</steps>
+</test>

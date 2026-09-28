@@ -1,0 +1,61 @@
+<!-- PICKER: the face gallery, deliberately naive. The background is a
+     live, blurred copy of the active face and every card holds a live,
+     scaled face tree. Phase 2 replaces these with snapshots. -->
+<screen permanent="true">
+	<styles>
+		<style name="style_picker_bg" blur_radius="30" recolor="#color_bg" recolor_opa="55%" />
+		<style name="style_dot" width="8" height="8" radius="#radius_round" bg_color="#color_text" bg_opa="30%" />
+		<style name="style_dot_active" bg_opa="100%" />
+	</styles>
+
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+
+		<!-- Frosted current face -->
+		<face_stack name="picker_bg" align="center" subject="subject_active_face" clickable="false">
+			<style name="style_picker_bg" />
+		</face_stack>
+
+		<!-- Carousel, one card per face, snapping to the centre -->
+		<row
+			name="face_carousel"
+			width="100%"
+			height="100%"
+			vertical_align="center"
+			scroll_snap_x="center"
+			scroll_one="true"
+			scrollbar_mode="off"
+			style_pad_hor="83"
+		>
+			<face_card_classic />
+			<face_card_activity />
+			<face_card_sport />
+			<face_card_minimal />
+			<face_card_info />
+			<face_card_chrono />
+		</row>
+
+		<!-- Page indicator (static in phase 1) -->
+		<row name="page_dots" align="bottom_mid" y="-14" gap="8" clickable="false">
+			<box>
+				<style name="style_dot" />
+				<style name="style_dot_active" />
+			</box>
+			<box>
+				<style name="style_dot" />
+			</box>
+			<box>
+				<style name="style_dot" />
+			</box>
+			<box>
+				<style name="style_dot" />
+			</box>
+			<box>
+				<style name="style_dot" />
+			</box>
+			<box>
+				<style name="style_dot" />
+			</box>
+		</row>
+	</view>
+</screen>

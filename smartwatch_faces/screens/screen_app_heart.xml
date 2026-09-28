@@ -1,0 +1,61 @@
+<!-- HEART RATE app: live bpm, the last 30 samples (watch_time.c appends
+     them to hr_chart) and the min / avg / max of that window. -->
+<screen permanent="true">
+	<styles>
+		<style name="style_chart" width="330" height="120" bg_opa="0%" border_width="0" pad_all="0" line_color="#color_surface_hi" line_width="1" />
+		<style name="style_chart_line" line_width="4" line_rounded="true" />
+		<style name="style_chart_point" width="0" height="0" />
+		<style name="style_stat" width="80" />
+	</styles>
+
+	<view extends="lv_obj" scrollable="false">
+		<style name="style_watch_screen" />
+		<event_cb callback="watch_on_back_gesture" trigger="gesture" />
+
+		<app_header icon="icon_heart_24" color="#color_heart" title="Heart rate" />
+
+		<!-- Live value -->
+		<row align="top_mid" y="64" gap="10" vertical_align="center">
+			<lv_label bind_text="subject_heart_rate" bind_text-fmt="%d" style_text_font="font_watch_digits_md" />
+			<lv_label text="BPM" style_text_font="font_watch_caption" style_text_color="#color_heart" />
+		</row>
+
+		<!-- Last 30 samples -->
+		<lv_chart name="hr_chart" align="top_mid" y="176" type="line" point_count="30" hor_div_line_count="3" ver_div_line_count="0">
+			<style name="style_chart" />
+			<style name="style_chart_line" selector="items" />
+			<style name="style_chart_point" selector="indicator" />
+			<lv_chart-axis axis="primary_y" min_value="40" max_value="120" />
+			<lv_chart-series color="#color_heart" axis="primary_y" values="68 70 71 69 72 74 73 76 79 82 85 83 80 78 75 73 72 70 69 71 74 77 76 74 72 71 73 72 71 72" />
+		</lv_chart>
+
+		<!-- Min / avg / max -->
+		<row align="top_mid" y="316" gap="24">
+			<column horizontal_align="center" gap="2">
+				<style name="style_stat" />
+				<lv_label bind_text="subject_hr_min" bind_text-fmt="%d" style_text_font="font_watch_title" />
+				<lv_label text="MIN">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			<column horizontal_align="center" gap="2">
+				<style name="style_stat" />
+				<lv_label bind_text="subject_hr_avg" bind_text-fmt="%d" style_text_font="font_watch_title" />
+				<lv_label text="AVG">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+			<column horizontal_align="center" gap="2">
+				<style name="style_stat" />
+				<lv_label bind_text="subject_hr_max" bind_text-fmt="%d" style_text_font="font_watch_title" />
+				<lv_label text="MAX">
+					<style name="style_caption" />
+				</lv_label>
+			</column>
+		</row>
+
+		<lv_label text="Resting · last 30 s" align="bottom_mid" y="-40">
+			<style name="style_caption" />
+		</lv_label>
+	</view>
+</screen>

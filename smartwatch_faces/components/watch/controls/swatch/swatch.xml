@@ -1,0 +1,22 @@
+<component>
+	<previews>
+		<preview name="default" width="80" height="80" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="color" type="color" default="#color_accent_lime" help="Swatch color" />
+		<prop name="index" type="int" default="0" help="Accent index written to subject_accent on tap" />
+	</api>
+
+	<styles>
+		<style name="style_swatch" width="44" height="44" radius="#radius_round" bg_opa="100%" outline_color="#color_text" outline_pad="3" />
+		<style name="style_swatch_selected" outline_width="3" />
+	</styles>
+
+	<!-- Accent color swatch: sets subject_accent, ringed while selected -->
+	<view extends="box" style_bg_color="$color">
+		<style name="style_swatch" />
+		<bind_style name="style_swatch_selected" subject="subject_accent" ref_value="$index" />
+		<subject_set_int_event subject="subject_accent" trigger="clicked" value="$index" />
+	</view>
+</component>

@@ -1,0 +1,42 @@
+<component>
+	<previews>
+		<preview name="default" width="200" height="200" style_bg_color="0x000000" />
+	</previews>
+
+	<!-- The geometry props are spelled out (no arithmetic in XML):
+	     offset = h / 2 - pivot_y puts the pivot on the dial centre. -->
+	<api>
+		<prop name="w" type="int" default="8" help="Hand thickness in px" />
+		<prop name="h" type="int" default="160" help="Total height: tip-to-pivot length plus the tail" />
+		<prop name="pivot_x" type="int" default="4" help="Horizontal pivot, always w / 2" />
+		<prop name="pivot_y" type="int" default="140" help="Tip-to-pivot length (the visible hand length)" />
+		<prop name="offset" type="int" default="-60" help="Vertical offset from the dial centre: h / 2 - pivot_y" />
+		<prop name="angle" type="int" default="0" help="Initial rotation in 0.1 deg (clockwise from 12). watch_time.c overwrites it" />
+	</api>
+
+	<!-- A clock hand. Place it in a full-size dial and give it one of the
+	     names hand_hour / hand_min / hand_sec: watch_time.c finds hands by
+	     name and rotates them around the pivot every second. Children
+	     (lume strips, counterweights) can be added at the use site.
+	     The hand follows the accent color (subject_accent); a local
+	     style_bg_color at the use site overrides it with a fixed color. -->
+	<view
+		extends="box"
+		width="$w"
+		height="$h"
+		align="center"
+		y="$offset"
+		clickable="false"
+		style_radius="#radius_round"
+		style_bg_opa="100%"
+		style_transform_pivot_x="$pivot_x"
+		style_transform_pivot_y="$pivot_y"
+		style_transform_rotation="$angle"
+	>
+		<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
+		<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
+		<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" />
+		<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" />
+		<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" />
+	</view>
+</component>

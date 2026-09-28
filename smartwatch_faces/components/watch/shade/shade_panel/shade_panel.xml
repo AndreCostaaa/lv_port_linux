@@ -1,0 +1,61 @@
+<component>
+	<previews>
+		<preview name="default" width="466" height="466" style_bg_color="0x000000" />
+	</previews>
+
+	<styles>
+		<style name="style_shade" width="100%" height="100%" bg_color="0x0E0E11" bg_opa="100%" />
+		<style name="style_handle" width="48" height="5" radius="#radius_round" bg_color="#color_surface_hi" bg_opa="100%" />
+	</styles>
+
+	<!-- Quick-settings shade: time, battery, four toggles and brightness.
+	     screen_home parks it above the screen and slides it down. It is
+	     clickable, so presses on it never reach the face underneath. -->
+	<view extends="box" scrollable="false">
+		<style name="style_shade" />
+
+		<!-- Time and battery -->
+		<row align="top_mid" y="34" vertical_align="center">
+			<lv_label bind_text="subject_hour" bind_text-fmt="%02d" style_text_font="font_watch_title" />
+			<lv_label text=":" style_text_font="font_watch_title" />
+			<lv_label bind_text="subject_minute" bind_text-fmt="%02d" style_text_font="font_watch_title" />
+		</row>
+		<row align="top_mid" y="74" gap="6" vertical_align="center">
+			<icon src="icon_battery_24" color="#color_stand" />
+			<lv_label bind_text="subject_battery" bind_text-fmt="%d%%">
+				<style name="style_caption" />
+			</lv_label>
+		</row>
+
+		<!-- 2x2 toggles -->
+		<column align="center" y="4" gap="16">
+			<row gap="16">
+				<round_toggle name="toggle_dnd" icon="icon_moon_32" subject="subject_dnd" />
+				<round_toggle name="toggle_flashlight" icon="icon_flashlight_32" subject="subject_flashlight" />
+			</row>
+			<row gap="16">
+				<round_toggle name="toggle_wifi" icon="icon_wifi_32" subject="subject_wifi" />
+				<round_toggle name="toggle_bt" icon="icon_bluetooth_32" subject="subject_bt" />
+			</row>
+		</column>
+
+		<!-- Brightness -->
+		<!-- Not scrollable: the slider knob reaching past the row would
+		     otherwise make it scroll and show a scrollbar -->
+		<row align="center" y="150" width="270" gap="14" vertical_align="center" scrollable="false">
+			<icon src="icon_brightness_32" />
+			<lv_slider flex_grow="1" min_value="5" max_value="100" bind_value="subject_brightness" style_height="10" style_bg_color="#color_surface_hi" style_bg_opa="100%" style_bg_color-knob="#color_text" style_pad_all-knob="5" style_radius="#radius_round" style_radius-indicator="#radius_round" style_radius-knob="#radius_round">
+				<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" selector="indicator" />
+				<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" selector="indicator" />
+				<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" selector="indicator" />
+				<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" selector="indicator" />
+				<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" selector="indicator" />
+			</lv_slider>
+		</row>
+
+		<!-- Swipe-up handle -->
+		<box align="bottom_mid" y="-20">
+			<style name="style_handle" />
+		</box>
+	</view>
+</component>

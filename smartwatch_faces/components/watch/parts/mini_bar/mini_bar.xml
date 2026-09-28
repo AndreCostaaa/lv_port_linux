@@ -1,0 +1,23 @@
+<component>
+	<previews>
+		<preview name="default" width="160" height="30" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="subject" type="subject" default="subject_battery" help="Int subject shown by the bar" />
+		<prop name="min" type="int" default="0" help="Value of an empty bar" />
+		<prop name="max" type="int" default="100" help="Value of a full bar" />
+	</api>
+
+	<!-- Thin read-only progress bar. The indicator follows the accent;
+	     override it at the use site with style_bg_color-indicator. -->
+	<view extends="lv_bar" width="100%" min_value="$min" max_value="$max" bind_value="$subject">
+		<style name="style_mini_bar" />
+		<style name="style_mini_bar_ind" selector="indicator" />
+		<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" selector="indicator" />
+		<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" selector="indicator" />
+		<bind_style name="style_accent_2" subject="subject_accent" ref_value="2" selector="indicator" />
+		<bind_style name="style_accent_3" subject="subject_accent" ref_value="3" selector="indicator" />
+		<bind_style name="style_accent_4" subject="subject_accent" ref_value="4" selector="indicator" />
+	</view>
+</component>

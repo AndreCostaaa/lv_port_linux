@@ -1,0 +1,35 @@
+<component>
+	<previews>
+		<preview name="default" width="300" height="466" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="face_index" type="string" default="0" help="Index of the face (0..5), passed to the C callbacks as user_data" />
+		<prop name="title" type="string" default="Classic" help="Face name shown above the preview" />
+	</api>
+
+	<styles>
+		<style name="style_card" width="300" height="#watch_size" />
+		<style name="style_edit_btn" width="56" height="56" />
+	</styles>
+
+	<!-- One page of the face picker carousel: name on top, an edit button
+	     below. The face_card_* variants extending this add the round
+	     face_slot (with the live face in it) in the middle. -->
+	<view extends="box" scrollable="false">
+		<style name="style_card" />
+
+		<lv_label text="$title" align="top_mid" y="48">
+			<style name="style_title" />
+		</lv_label>
+
+		<!-- Edit: opens screen_face_edit for this face -->
+		<box name="edit_btn" align="bottom_mid" y="-36">
+			<style name="style_round_button" />
+			<style name="style_edit_btn" />
+			<style name="style_round_button_pressed" selector="pressed" />
+			<icon src="icon_edit_32" align="center" />
+			<event_cb callback="watch_on_face_edit" trigger="clicked" user_data="$face_index" />
+		</box>
+	</view>
+</component>

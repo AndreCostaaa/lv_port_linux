@@ -1,0 +1,13 @@
+<component>
+	<previews>
+		<preview name="default" width="64" height="64" style_bg_color="0x000000" />
+	</previews>
+
+	<api>
+		<prop name="src" type="image" default="icon_heart_24" help="A8 icon (icon_*_24 / _32 / _48)" />
+		<prop name="color" type="color" default="0xFFFFFF" help="Icon color" />
+	</api>
+
+	<!-- Single-color icon. The A8 image is painted in $color. -->
+	<view extends="lv_image" src="$src" style_image_recolor="$color" style_image_recolor_opa="100%" />
+</component>

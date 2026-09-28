@@ -1,0 +1,48 @@
+<component>
+	<!-- Activity face: move / exercise / stand rings around a digital
+	     time, with heart-rate and steps complications. -->
+	<styles>
+		<style name="style_digits" text_font="font_watch_digits_md" />
+	</styles>
+
+	<view extends="box" scrollable="false">
+		<style name="style_face" />
+
+		<!-- Activity rings, outer to inner -->
+		<ring size="452" thickness="30" subject="subject_move" style_arc_color="#color_move" style_arc_color-indicator="#color_move" />
+		<ring size="388" thickness="30" subject="subject_exercise" style_arc_color="#color_exercise" style_arc_color-indicator="#color_exercise" />
+		<ring size="324" thickness="30" subject="subject_stand" style_arc_color="#color_stand" style_arc_color-indicator="#color_stand" />
+
+		<!-- Date -->
+		<row align="center" y="-78" gap="8">
+			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
+			<accent_label bind_text="subject_weekday" style_text_font="font_watch_caption" />
+			<lv_label bind_text="subject_day" bind_text-fmt="%d" style_text_font="font_watch_caption" />
+		</row>
+
+		<!-- Time -->
+		<row align="center" y="-4" vertical_align="center">
+			<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label text=":" style_text_color="#color_text_muted">
+				<style name="style_digits" />
+			</lv_label>
+			<lv_label bind_text="subject_minute" bind_text-fmt="%02d">
+				<style name="style_digits" />
+			</lv_label>
+		</row>
+
+		<!-- Complications -->
+		<row align="center" y="68" gap="20" vertical_align="center">
+			<row gap="6" vertical_align="center">
+				<icon src="icon_heart_24" color="#color_heart" />
+				<lv_label bind_text="subject_heart_rate" bind_text-fmt="%d" />
+			</row>
+			<row gap="6" vertical_align="center">
+				<icon src="icon_footprints_24" color="#color_exercise" />
+				<lv_label bind_text="subject_steps" bind_text-fmt="%d" />
+			</row>
+		</row>
+	</view>
+</component>
