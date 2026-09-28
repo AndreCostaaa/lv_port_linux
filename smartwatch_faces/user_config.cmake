@@ -17,5 +17,6 @@ list(APPEND LV_EDITOR_PROJECT_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/watch_bench.c
     ${CMAKE_CURRENT_LIST_DIR}/src/watch_callbacks.c
     ${CMAKE_CURRENT_LIST_DIR}/src/watch_nav.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/watch_thumbs.c
     ${CMAKE_CURRENT_LIST_DIR}/src/watch_time.c
 )

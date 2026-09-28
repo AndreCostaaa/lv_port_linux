@@ -25,7 +25,7 @@
 
 	<!-- Recessed 270 deg gauge with a tick scale, used for complications on
 	     analog faces. The gauge arc follows the accent unless overridden. -->
-	<view extends="box">
+	<view extends="box" clickable="false">
 		<style name="style_subdial" />
 
 		<!-- Tick scale around the gauge -->

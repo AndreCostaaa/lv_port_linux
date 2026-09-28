@@ -8,7 +8,9 @@
 		<style name="style_ticks_major" length="14" line_width="3" line_color="#color_text_muted" />
 	</styles>
 
-	<view extends="box" scrollable="false">
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
 		<style name="style_face" />
 
 		<!-- Minute ticks inside the seconds arc -->
@@ -37,7 +39,7 @@
 		</ring>
 
 		<!-- Date -->
-		<row align="top_mid" y="72" gap="8">
+		<row align="top_mid" y="72" gap="8" clickable="false">
 			<bind_flag_if_eq subject="subject_show_date" flag="hidden" ref_value="0" />
 			<accent_label bind_text="subject_weekday" style_text_font="font_watch_body" />
 			<lv_label bind_text="subject_day" bind_text-fmt="%d" style_text_font="font_watch_body" />
@@ -45,7 +47,7 @@
 		</row>
 
 		<!-- Time -->
-		<row align="center" y="-44" vertical_align="center">
+		<row align="center" y="-44" vertical_align="center" clickable="false">
 			<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
 				<style name="style_digits" />
 			</lv_label>
@@ -58,12 +60,12 @@
 		</row>
 
 		<!-- 2x2 complications -->
-		<column align="center" y="104" gap="8">
-			<row gap="8">
+		<column align="center" y="104" gap="8" clickable="false">
+			<row gap="8" clickable="false">
 				<stat_tile icon="icon_heart_24" color="#color_heart" subject="subject_heart_rate" fmt="%d bpm" min="40" max="180" />
 				<stat_tile icon="icon_footprints_24" color="#color_exercise" subject="subject_steps" fmt="%d" min="0" max="10000" />
 			</row>
-			<row gap="8">
+			<row gap="8" clickable="false">
 				<stat_tile icon="icon_thermometer_24" color="#color_weather" subject="subject_temp" fmt="%d°C" min="-10" max="40" />
 				<stat_tile icon="icon_battery_24" color="#color_stand" subject="subject_battery" fmt="%d%%" min="0" max="100" />
 			</row>

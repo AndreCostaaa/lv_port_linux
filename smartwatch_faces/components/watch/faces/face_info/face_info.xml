@@ -8,18 +8,20 @@
 		<style name="style_bar_row" width="132" />
 	</styles>
 
-	<view extends="box" scrollable="false">
+	<!-- Decoration only: nothing inside a face is clickable, so presses reach
+	     whatever holds the face (face_stack, face_slot, ...). -->
+	<view extends="box" scrollable="false" clickable="false">
 		<style name="style_face" />
 
 		<!-- Date -->
-		<row align="top_mid" y="44" gap="8">
+		<row align="top_mid" y="44" gap="8" clickable="false">
 			<accent_label bind_text="subject_weekday" style_text_font="font_watch_caption" />
 			<lv_label bind_text="subject_day" bind_text-fmt="%d" style_text_font="font_watch_caption" />
 			<lv_label bind_text="subject_month" style_text_font="font_watch_caption" style_text_color="#color_text_muted" />
 		</row>
 
 		<!-- Time -->
-		<row align="top_mid" y="66" vertical_align="center">
+		<row align="top_mid" y="66" vertical_align="center" clickable="false">
 			<lv_label bind_text="subject_hour" bind_text-fmt="%02d">
 				<style name="style_digits" />
 			</lv_label>
@@ -32,12 +34,12 @@
 		</row>
 
 		<!-- Current weather -->
-		<row align="top_mid" y="164" gap="12" vertical_align="center">
+		<row align="top_mid" y="164" gap="12" vertical_align="center" clickable="false">
 			<icon src="icon_cloud_sun_48" color="#color_weather" />
 			<lv_label bind_text="subject_temp" bind_text-fmt="%d°">
 				<style name="style_value" />
 			</lv_label>
-			<column gap="2">
+			<column gap="2" clickable="false">
 				<lv_label text="Partly cloudy" style_text_font="font_watch_caption" />
 				<lv_label text="H 24°  L 14°">
 					<style name="style_caption" />
@@ -46,7 +48,7 @@
 		</row>
 
 		<!-- Hourly forecast -->
-		<row align="top_mid" y="226" gap="12">
+		<row align="top_mid" y="226" gap="12" clickable="false">
 			<forecast_slot time="11" icon="icon_sun_24" temp="22°" />
 			<forecast_slot time="12" icon="icon_cloud_sun_24" temp="23°" />
 			<forecast_slot time="13" icon="icon_cloud_24" temp="22°" />
@@ -54,10 +56,10 @@
 		</row>
 
 		<!-- Next event -->
-		<row align="top_mid" y="316" gap="10" vertical_align="center" content_align="center" style_pad_hor="16">
+		<row align="top_mid" y="316" gap="10" vertical_align="center" content_align="center" style_pad_hor="16" clickable="false">
 			<style name="style_surface" />
 			<style name="style_pill" />
-			<box>
+			<box clickable="false">
 				<style name="style_pill_bar" />
 				<bind_style name="style_accent_0" subject="subject_accent" ref_value="0" />
 				<bind_style name="style_accent_1" subject="subject_accent" ref_value="1" />
@@ -70,13 +72,13 @@
 		</row>
 
 		<!-- Battery and steps -->
-		<row align="top_mid" y="380" gap="16">
-			<row gap="8" vertical_align="center">
+		<row align="top_mid" y="380" gap="16" clickable="false">
+			<row gap="8" vertical_align="center" clickable="false">
 				<style name="style_bar_row" />
 				<icon src="icon_battery_24" color="#color_stand" />
 				<mini_bar subject="subject_battery" flex_grow="1" style_bg_color-indicator="#color_stand" />
 			</row>
-			<row gap="8" vertical_align="center">
+			<row gap="8" vertical_align="center" clickable="false">
 				<style name="style_bar_row" />
 				<icon src="icon_footprints_24" color="#color_exercise" />
 				<mini_bar subject="subject_steps" max="10000" flex_grow="1" style_bg_color-indicator="#color_exercise" />

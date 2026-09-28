@@ -10,7 +10,7 @@
 	</api>
 
 	<!-- One hour of the hourly forecast strip: hour, icon, temperature -->
-	<view extends="column" width="60" gap="4" horizontal_align="center">
+	<view extends="column" width="60" gap="4" horizontal_align="center" clickable="false">
 		<lv_label text="$time">
 			<style name="style_caption" />
 		</lv_label>

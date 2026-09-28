@@ -6,8 +6,21 @@
  */
 
 #include "watch_nav.h"
+#include "watch_callbacks.h"
 
 #include <stdlib.h>
+
+/* LVGL's defaults (50 px, reset below 3 px per read) miss slow or short
+ * swipes. A watch screen is small: accept any steady 40 px swipe. */
+#define GESTURE_MIN_DISTANCE  40
+#define GESTURE_MIN_VELOCITY  1
+
+void watch_callbacks_tune_indev(lv_indev_t * indev)
+{
+    if(indev == NULL || lv_indev_get_type(indev) != LV_INDEV_TYPE_POINTER) return;
+    lv_indev_set_gesture_min_distance(indev, GESTURE_MIN_DISTANCE);
+    lv_indev_set_gesture_min_velocity(indev, GESTURE_MIN_VELOCITY);
+}
 
 static int32_t user_data_int(lv_event_t * e)
 {
@@ -46,12 +59,16 @@ void watch_on_home_gesture(lv_event_t * e)
 
 static lv_point_t press_point;
 
-/* screen_home: press on the face, remembered for the long-press check */
+/* screen_home: press on the face, remembered for the long-press check.
+ * Also tunes the input device: in the editor preview lv_demo_watch() does
+ * not run, and this press is before any movement, so it still applies. */
 void watch_on_face_pressed(lv_event_t * e)
 {
     LV_UNUSED(e);
     lv_indev_t * indev = lv_indev_active();
-    if(indev) lv_indev_get_point(indev, &press_point);
+    if(indev == NULL) return;
+    watch_callbacks_tune_indev(indev);
+    lv_indev_get_point(indev, &press_point);
 }
 
 /* screen_home: long-press on the face */

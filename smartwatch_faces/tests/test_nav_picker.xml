@@ -1,0 +1,86 @@
+<!-- Navigation through watch_nav (C) in the editor runtime: shade, picker,
+     select a face, launcher, an app and back. -->
+<test>
+	<view extends="screen_home" />
+	<steps>
+		<!-- Swipe down: shade -->
+		<move_to x="233" y="100" />
+		<press />
+		<wait ms="40" />
+		<move_to x="233" y="130" />
+		<wait ms="40" />
+		<move_to x="233" y="160" />
+		<wait ms="40" />
+		<move_to x="233" y="200" />
+		<wait ms="40" />
+		<move_to x="233" y="260" />
+		<wait ms="40" />
+		<release />
+		<wait ms="600" />
+		<screenshot_compare path="nav_1_shade.png" />
+
+		<!-- Swipe up: shade closes -->
+		<move_to x="233" y="360" />
+		<press />
+		<wait ms="40" />
+		<move_to x="233" y="300" />
+		<wait ms="40" />
+		<move_to x="233" y="200" />
+		<wait ms="40" />
+		<release />
+		<wait ms="600" />
+		<screenshot_compare path="nav_1b_shade_closed.png" />
+
+		<!-- Long-press: picker -->
+		<move_to x="233" y="300" />
+		<press />
+		<wait ms="40" />
+		<wait ms="900" />
+		<release />
+		<wait ms="800" />
+		<screenshot_compare path="nav_2_picker.png" />
+
+		<!-- Scroll one card and tap it: activity face on home -->
+		<move_to x="380" y="233" />
+		<press />
+		<wait ms="40" />
+		<move_to x="300" y="233" />
+		<wait ms="40" />
+		<move_to x="120" y="233" />
+		<wait ms="40" />
+		<release />
+		<wait ms="1000" />
+		<click_at x="233" y="233" />
+		<wait ms="800" />
+		<subject_compare subject="subject_active_face" value="1" />
+		<screenshot_compare path="nav_3_home_activity.png" />
+
+		<!-- Swipe left: launcher, open heart rate, swipe right: back -->
+		<move_to x="380" y="233" />
+		<press />
+		<wait ms="40" />
+		<move_to x="320" y="233" />
+		<wait ms="40" />
+		<move_to x="180" y="233" />
+		<wait ms="40" />
+		<release />
+		<wait ms="700" />
+		<screenshot_compare path="nav_4_launcher.png" />
+		<click_on name="app_icon_heart" />
+		<wait ms="700" />
+		<screenshot_compare path="nav_5_heart.png" />
+		<move_to x="100" y="233" />
+		<press />
+		<wait ms="40" />
+		<move_to x="160" y="233" />
+		<wait ms="40" />
+		<move_to x="320" y="233" />
+		<wait ms="40" />
+		<release />
+		<wait ms="700" />
+		<screenshot_compare path="nav_6_back_launcher.png" />
+
+		<!-- Tests share subjects: restore the default -->
+		<subject_set subject="subject_active_face" value="0" />
+	</steps>
+</test>

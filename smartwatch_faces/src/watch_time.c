@@ -11,6 +11,7 @@
 #endif
 
 #include "watch_time.h"
+#include "watch_thumbs.h"
 
 #include <time.h>
 
@@ -144,6 +145,7 @@ static void tick_cb(lv_timer_t * timer)
     update_clock(&t);
     update_heart_rate();
     update_activity();
+    watch_thumbs_tick();    /* after the hands moved */
 
     /* Battery drains 1% every 3 minutes */
     if(tick_cnt % 180 == 0) set_int(&subject_battery, LV_MAX(5, lv_subject_get_int(&subject_battery) - 1));

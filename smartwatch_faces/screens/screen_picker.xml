@@ -11,10 +11,13 @@
 	<view extends="lv_obj" scrollable="false">
 		<style name="style_watch_screen" />
 
-		<!-- Frosted current face -->
-		<face_stack name="picker_bg" align="center" subject="subject_active_face" clickable="false">
-			<style name="style_picker_bg" />
-		</face_stack>
+		<!-- Frosted current face. The plain holder lets watch_thumbs.c
+		     snapshot picker_bg including its own blur and recolor. -->
+		<box name="picker_bg_holder" width="100%" height="100%" clickable="false" scrollable="false">
+			<face_stack name="picker_bg" align="center" subject="subject_active_face" clickable="false">
+				<style name="style_picker_bg" />
+			</face_stack>
+		</box>
 
 		<!-- Carousel, one card per face, snapping to the centre -->
 		<row
