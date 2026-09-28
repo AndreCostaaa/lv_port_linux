@@ -6,6 +6,12 @@
  * Each effect: take the snapshot(s), build an overlay of images on
  * lv_layer_top(), drive it with one lv_anim (progress 0..FX_P_MAX), then
  * call `done`, delete the overlay and free the snapshots.
+ *
+ * Debugging:
+ * - WATCH_FX_SLOW=<n>  play every effect n times slower (the motion is a
+ *                      function of the progress, so it follows the same path);
+ * - WATCH_FX_DEBUG=1   give every piece (shatter tile, ripple band, reveal
+ *                      circle, flip image) its own coloured border.
  */
 
 #include "watch_fx.h"
@@ -59,6 +65,9 @@ struct fx_t {
 };
 
 static bool busy;
+static bool env_read;
+static uint32_t slow_factor = 1;
+static bool debug_borders;
 static uint32_t rnd_state = 0x2545F491u;
 
 static int32_t rnd_range(int32_t min, int32_t max)
@@ -68,6 +77,27 @@ static int32_t rnd_range(int32_t min, int32_t max)
     rnd_state ^= rnd_state << 5;
     if(max <= min) return min;
     return min + (int32_t)(rnd_state % (uint32_t)(max - min + 1));
+}
+
+static void read_env(void)
+{
+    if(env_read) return;
+    env_read = true;
+    const char * slow = getenv("WATCH_FX_SLOW");
+    if(slow && atoi(slow) > 1) slow_factor = (uint32_t)atoi(slow);
+    const char * dbg = getenv("WATCH_FX_DEBUG");
+    debug_borders = dbg && dbg[0] != '0';
+}
+
+/* WATCH_FX_DEBUG: a border in a colour of its own, drawn over the content
+ * (border_post), so each window onto the snapshot is visible */
+static void debug_border(lv_obj_t * obj, uint32_t index, int32_t width)
+{
+    if(!debug_borders) return;
+    lv_obj_set_style_border_width(obj, width, 0);
+    lv_obj_set_style_border_color(obj, lv_color_hsv_to_rgb((uint16_t)((index * 47) % 360), 90, 100), 0);
+    lv_obj_set_style_border_opa(obj, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_post(obj, true, 0);
 }
 
 static int32_t isqrt(int32_t v)
@@ -154,6 +184,7 @@ static fx_t * fx_create(fx_step_cb_t step, watch_fx_done_cb_t done, void * done_
     fx->done = done;
     fx->done_ud = done_ud;
     fx->overlay = fx_overlay_create();
+    read_env();
     busy = true;
     return fx;
 }
@@ -167,7 +198,7 @@ static void fx_start(fx_t * fx, uint32_t duration, lv_anim_path_cb_t path)
     lv_anim_set_user_data(&a, fx);
     lv_anim_set_exec_cb(&a, anim_exec_cb);
     lv_anim_set_values(&a, 0, FX_P_MAX);
-    lv_anim_set_duration(&a, duration);
+    lv_anim_set_duration(&a, duration * slow_factor);
     lv_anim_set_path_cb(&a, path);
     lv_anim_set_completed_cb(&a, anim_completed_cb);
     lv_anim_start(&a);
@@ -250,6 +281,7 @@ void watch_fx_shatter(lv_obj_t * obj, lv_point_t origin, watch_fx_done_cb_t done
 
             tile_t * tl = &sh->tiles[sh->cnt++];
             tl->cont = fx_slice_create(fx->overlay, snap, tx, ty, cw, ch);
+            debug_border(tl->cont, sh->cnt, 2);
             lv_obj_set_style_transform_pivot_x(tl->cont, cw / 2, 0);
             lv_obj_set_style_transform_pivot_y(tl->cont, ch / 2, 0);
             tl->x0 = a.x1 + tx;
@@ -327,6 +359,7 @@ void watch_fx_ripple(lv_point_t origin)
         int32_t sy = (int32_t)i * RIPPLE_SLICE_H;
         lv_obj_t * band = fx_slice_create(fx->overlay, snap, 0, sy, w, LV_MIN(RIPPLE_SLICE_H, h - sy));
         lv_obj_set_y(band, sy);
+        debug_border(band, i, 1);
         rp->img[i] = lv_obj_get_child(band, 0);
     }
 
@@ -386,6 +419,7 @@ void watch_fx_reveal(lv_obj_t * screen, lv_point_t origin, bool reverse, watch_f
     lv_obj_set_style_radius(rv->circle, LV_RADIUS_CIRCLE, 0);
     lv_obj_set_style_clip_corner(rv->circle, true, 0);
     rv->img = fx_image_create(rv->circle, snap);
+    debug_border(rv->circle, 0, 3);
 
     fx_start(fx, REVEAL_DURATION, lv_anim_path_ease_in_out);
 }
@@ -462,6 +496,8 @@ void watch_fx_flip(lv_obj_t * card, lv_obj_t * screen, bool reverse, watch_fx_do
     fl->card_img = fx_image_create(fx->overlay, card_snap);
     lv_obj_set_pos(fl->card_img, cx - fl->card_w / 2, cy - lv_obj_get_height(card) / 2);
     fl->screen_img = fx_image_create(fx->overlay, screen_snap);
+    debug_border(fl->card_img, 0, 3);
+    debug_border(fl->screen_img, 3, 3);
     lv_obj_set_pos(fl->screen_img, cx - fl->screen_w / 2, cy - lv_obj_get_height(other) / 2);
 
     watch_obj_set_hidden(card, true);
