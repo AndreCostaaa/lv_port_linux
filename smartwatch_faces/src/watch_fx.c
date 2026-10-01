@@ -57,6 +57,10 @@ struct fx_t {
     lv_obj_t * overlay;
     lv_draw_buf_t * snap_a;
     lv_draw_buf_t * snap_b;
+    lv_obj_t * src_a;             /* what snap_a / snap_b show; re-rendered in live mode */
+    lv_obj_t * src_b;
+    bool slot_a;                  /* src_a is a face slot: render its live face */
+    bool slot_b;
     lv_obj_t * restore;           /* hidden while playing, shown at the end */
     fx_step_cb_t step;
     watch_fx_done_cb_t done;
@@ -65,6 +69,8 @@ struct fx_t {
 };
 
 static bool busy;
+static bool live_mode;
+static watch_fx_stats_t stats;
 static bool env_read;
 static uint32_t slow_factor = 1;
 static bool debug_borders;
@@ -87,6 +93,8 @@ static void read_env(void)
     if(slow && atoi(slow) > 1) slow_factor = (uint32_t)atoi(slow);
     const char * dbg = getenv("WATCH_FX_DEBUG");
     debug_borders = dbg && dbg[0] != '0';
+    const char * live = getenv("WATCH_FX_LIVE");
+    live_mode = live && live[0] != '0';
 }
 
 /* WATCH_FX_DEBUG: a border in a colour of its own, drawn over the content
@@ -145,10 +153,46 @@ static lv_obj_t * fx_slice_create(lv_obj_t * parent, lv_draw_buf_t * snap, int32
     return cont;
 }
 
+/* Render `src` into `buf` as it looks live. The effect hides the objects it
+ * replaces, so they are shown just for the render. For a face slot, render
+ * the live face (child 0) and not the snapshot thumbnails next to it. */
+static void render_live(lv_obj_t * src, lv_draw_buf_t * buf, bool slot)
+{
+    bool was_hidden = watch_obj_is_hidden(src);
+    watch_obj_set_hidden(src, false);
+
+    uint32_t cnt = slot ? lv_obj_get_child_count(src) : 0;
+    uint32_t hidden_mask = 0;
+    for(uint32_t i = 0; i < cnt && i < 32; i++) {
+        lv_obj_t * child = lv_obj_get_child(src, (int32_t)i);
+        if(watch_obj_is_hidden(child)) hidden_mask |= 1u << i;
+        watch_obj_set_hidden(child, i != 0);
+    }
+
+    lv_snapshot_take_to_draw_buf(src, LV_COLOR_FORMAT_ARGB8888, buf);
+    lv_image_cache_drop(buf);
+
+    for(uint32_t i = 0; i < cnt && i < 32; i++) {
+        watch_obj_set_hidden(lv_obj_get_child(src, (int32_t)i), (hidden_mask >> i) & 1u);
+    }
+    watch_obj_set_hidden(src, was_hidden);
+}
+
 static void anim_exec_cb(void * var, int32_t v)
 {
     fx_t * fx = var;
+    uint32_t t0 = lv_tick_get();
+    if(live_mode) {
+        if(fx->src_a && fx->snap_a) render_live(fx->src_a, fx->snap_a, fx->slot_a);
+        if(fx->src_b && fx->snap_b) render_live(fx->src_b, fx->snap_b, fx->slot_b);
+        lv_obj_invalidate(fx->overlay);
+    }
     fx->step(fx, v);
+
+    uint32_t elapsed = lv_tick_elaps(t0);
+    stats.frames++;
+    stats.work_ms += elapsed;
+    if(elapsed > stats.work_max_ms) stats.work_max_ms = elapsed;
 }
 
 static void anim_completed_cb(lv_anim_t * a)
@@ -263,6 +307,8 @@ void watch_fx_shatter(lv_obj_t * obj, lv_point_t origin, watch_fx_done_cb_t done
 
     fx_t * fx = fx_create(shatter_step, done, user_data);
     fx->snap_a = snap;
+    fx->src_a = obj;
+    fx->slot_a = true;
     fx->restore = obj;
     shatter_t * sh = lv_malloc_zeroed(sizeof(shatter_t));
     LV_ASSERT_MALLOC(sh);
@@ -349,6 +395,7 @@ void watch_fx_ripple(lv_point_t origin)
 
     fx_t * fx = fx_create(ripple_step, NULL, NULL);
     fx->snap_a = snap;
+    fx->src_a = screen;
     ripple_t * rp = lv_malloc_zeroed(sizeof(ripple_t) + cnt * sizeof(lv_obj_t *));
     LV_ASSERT_MALLOC(rp);
     fx->data = rp;
@@ -401,6 +448,7 @@ void watch_fx_reveal(lv_obj_t * screen, lv_point_t origin, bool reverse, watch_f
 
     fx_t * fx = fx_create(reveal_step, done, user_data);
     fx->snap_a = snap;
+    fx->src_a = screen;
     reveal_t * rv = lv_malloc_zeroed(sizeof(reveal_t));
     LV_ASSERT_MALLOC(rv);
     fx->data = rv;
@@ -479,6 +527,9 @@ void watch_fx_flip(lv_obj_t * card, lv_obj_t * screen, bool reverse, watch_fx_do
     fx_t * fx = fx_create(flip_step, done, user_data);
     fx->snap_a = card_snap;
     fx->snap_b = screen_snap;
+    fx->src_a = card;
+    fx->slot_a = true;
+    fx->src_b = other;
     fx->restore = card;
     lv_obj_set_style_bg_color(fx->overlay, lv_color_black(), 0);
     flip_t * fl = lv_malloc_zeroed(sizeof(flip_t));
@@ -514,6 +565,33 @@ bool watch_fx_enabled(void)
     return env == NULL || env[0] != '0';
 }
 
+bool watch_fx_available(void)
+{
+    return true;
+}
+
+void watch_fx_set_live(bool en)
+{
+    read_env();
+    live_mode = en;
+}
+
+bool watch_fx_is_live(void)
+{
+    read_env();
+    return live_mode;
+}
+
+void watch_fx_get_stats(watch_fx_stats_t * s)
+{
+    *s = stats;
+}
+
+void watch_fx_reset_stats(void)
+{
+    lv_memzero(&stats, sizeof(stats));
+}
+
 bool watch_fx_busy(void)
 {
     return busy;
@@ -522,6 +600,11 @@ bool watch_fx_busy(void)
 #else /* LV_USE_SNAPSHOT */
 
 bool watch_fx_enabled(void) { return false; }
+bool watch_fx_available(void) { return false; }
+void watch_fx_set_live(bool en) { LV_UNUSED(en); }
+bool watch_fx_is_live(void) { return false; }
+void watch_fx_get_stats(watch_fx_stats_t * s) { lv_memzero(s, sizeof(*s)); }
+void watch_fx_reset_stats(void) {}
 bool watch_fx_busy(void) { return false; }
 void watch_fx_shatter(lv_obj_t * obj, lv_point_t origin, watch_fx_done_cb_t done, void * user_data)
 {

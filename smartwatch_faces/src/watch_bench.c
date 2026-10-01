@@ -15,8 +15,8 @@
  * latter in cores (x CPU count).
  */
 
-/* sysconf() */
-#if defined(__linux__) && !defined(_POSIX_C_SOURCE)
+/* clock_gettime(), sysconf() */
+#ifndef _POSIX_C_SOURCE
     #define _POSIX_C_SOURCE 200809L
 #endif
 
@@ -24,9 +24,12 @@
 #include "watch_nav.h"
 #include "watch_thumbs.h"
 #include "watch_depth.h"
+#include "watch_fx.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #if defined(__linux__)
     #include <unistd.h>
 #endif
@@ -37,12 +40,17 @@
 #define STATIC_MEASURE_MS  4000   /* home and static picker */
 #define SCROLL_MEASURE_MS  5000   /* scrolling: one full sweep there and back */
 #define SCROLL_SWEEP_MS   2500
+#define FX_MEASURE_MS     4000      /* effects, played back to back */
+#define FX_LIGHT_FACE     3         /* face_minimal */
+#define FX_HEAVY_FACE     17        /* face_skeleton */
 #define FLUSH_STALL_MS    100      /* average flush above this: display was blocked */
 
 typedef enum {
     MODE_ANY,
     MODE_LIVE,
     MODE_SNAPSHOT,
+    MODE_FX_SNAPSHOT,     /* effect from a snapshot taken once */
+    MODE_FX_LIVE,         /* effect re-rendering its source every frame */
 } bench_mode_t;
 
 typedef struct {
@@ -60,7 +68,10 @@ typedef struct {
     uint32_t refr_ms, render_ms, flush_ms;
     uint32_t reports;
     uint32_t max_render_ms;     /* longest render, flush excluded */
+    uint32_t frames;            /* display refresh cycles */
+    double cpu_per_frame_ms;    /* process CPU time / refresh cycles */
     watch_thumbs_stats_t snap;
+    watch_fx_stats_t fx;        /* effect work outside the render (effect scenes) */
     uint32_t rss_kb;
 } bench_result_t;
 
@@ -70,6 +81,11 @@ static void enter_picker_snapshot(void);
 static void enter_scrolling(void);
 static void enter_gallery(void);
 static void enter_gallery_scrolling(void);
+static void enter_fx_shatter_light(void);
+static void enter_fx_shatter_heavy(void);
+static void enter_fx_ripple(void);
+static void enter_fx_flip(void);
+static void enter_fx_reveal(void);
 
 static const bench_stage_t stages[] = {
     {"home",             MODE_ANY,      enter_home,            STATIC_MEASURE_MS},
@@ -81,6 +97,16 @@ static const bench_stage_t stages[] = {
     {"picker scrolling", MODE_SNAPSHOT, enter_scrolling,       SCROLL_MEASURE_MS},
     {"gallery static",   MODE_SNAPSHOT, enter_gallery,         STATIC_MEASURE_MS},
     {"gallery scrolling", MODE_SNAPSHOT, enter_gallery_scrolling, SCROLL_MEASURE_MS},
+    {"fx shatter light", MODE_FX_LIVE,     enter_fx_shatter_light, FX_MEASURE_MS},
+    {"fx shatter light", MODE_FX_SNAPSHOT, enter_fx_shatter_light, FX_MEASURE_MS},
+    {"fx shatter heavy", MODE_FX_LIVE,     enter_fx_shatter_heavy, FX_MEASURE_MS},
+    {"fx shatter heavy", MODE_FX_SNAPSHOT, enter_fx_shatter_heavy, FX_MEASURE_MS},
+    {"fx ripple",        MODE_FX_LIVE,     enter_fx_ripple,        FX_MEASURE_MS},
+    {"fx ripple",        MODE_FX_SNAPSHOT, enter_fx_ripple,        FX_MEASURE_MS},
+    {"fx flip",          MODE_FX_LIVE,     enter_fx_flip,          FX_MEASURE_MS},
+    {"fx flip",          MODE_FX_SNAPSHOT, enter_fx_flip,          FX_MEASURE_MS},
+    {"fx reveal",        MODE_FX_LIVE,     enter_fx_reveal,        FX_MEASURE_MS},
+    {"fx reveal",        MODE_FX_SNAPSHOT, enter_fx_reveal,        FX_MEASURE_MS},
 };
 #define STAGE_CNT (sizeof(stages) / sizeof(stages[0]))
 
@@ -98,6 +124,15 @@ static uint32_t render_start;
 static uint32_t flush_start;
 static uint32_t flush_in_render;
 static uint32_t max_render;
+static uint32_t frames_refreshed;
+static uint64_t cpu_start_us;
+
+static uint64_t process_cpu_us(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+    return (uint64_t)ts.tv_sec * 1000000u + (uint64_t)ts.tv_nsec / 1000u;
+}
 
 static lv_obj_t * carousel;
 static lv_obj_t * grid;       /* gallery */
@@ -132,6 +167,9 @@ static void render_event_cb(lv_event_t * e)
                 if(render > max_render) max_render = render;
                 break;
             }
+        case LV_EVENT_REFR_READY:
+            if(measuring) frames_refreshed++;
+            break;
         default:
             break;
     }
@@ -173,8 +211,11 @@ static uint32_t read_rss_kb(void)
 static void measure_begin(void)
 {
     max_render = 0;
+    frames_refreshed = 0;
+    cpu_start_us = process_cpu_us();
     sys_fps = sys_cpu = sys_cpu_proc = sys_refr = sys_render = sys_flush = sys_reports = 0;
     watch_thumbs_reset_stats();
+    watch_fx_reset_stats();
     measuring = true;
 }
 
@@ -193,7 +234,10 @@ static void measure_end(bench_result_t * r)
         r->reports = sys_reports;
     }
     r->max_render_ms = max_render;
+    r->frames = frames_refreshed;
+    if(frames_refreshed) r->cpu_per_frame_ms = (double)(process_cpu_us() - cpu_start_us) / 1000.0 / frames_refreshed;
     watch_thumbs_get_stats(&r->snap);
+    watch_fx_get_stats(&r->fx);
     r->rss_kb = read_rss_kb();
 }
 
@@ -290,9 +334,120 @@ static void enter_gallery_scrolling(void)
     lv_anim_start(&a);
 }
 
+/**********************
+ * Effect scenes: the picker (in snapshot mode, so the backdrop is cheap and
+ * the same for both) with one effect played again and again. The effects are
+ * called directly, not through watch_nav, so nothing is removed or loaded.
+ **********************/
+
+typedef enum {
+    FX_NONE,
+    FX_SHATTER,
+    FX_RIPPLE,
+    FX_FLIP,
+    FX_REVEAL,
+} fx_kind_t;
+
+static fx_kind_t fx_kind;
+static int32_t fx_face;
+static lv_timer_t * fx_timer;
+
+static lv_obj_t * picker_slot(int32_t face)
+{
+    lv_obj_t * card = lv_obj_get_child(carousel, face);
+    return card ? lv_obj_find_by_name(card, "face_slot") : NULL;
+}
+
+static void fx_repeat_cb(lv_timer_t * t)
+{
+    LV_UNUSED(t);
+    if(watch_fx_busy()) return;
+    lv_obj_t * slot = picker_slot(fx_face);
+    lv_display_t * disp = lv_display_get_default();
+    lv_point_t centre = {lv_display_get_horizontal_resolution(disp) / 2, lv_display_get_vertical_resolution(disp) / 2};
+
+    switch(fx_kind) {
+        case FX_SHATTER:
+            if(slot) watch_fx_shatter(slot, centre, NULL, NULL);
+            break;
+        case FX_RIPPLE:
+            watch_fx_ripple(centre);
+            break;
+        case FX_FLIP:
+            if(slot && screen_face_edit) watch_fx_flip(slot, screen_face_edit, false, NULL, NULL);
+            break;
+        case FX_REVEAL:
+            if(screen_app_heart) watch_fx_reveal(screen_app_heart, centre, false, NULL, NULL);
+            break;
+        default:
+            break;
+    }
+}
+
+static void enter_fx(fx_kind_t kind, int32_t face)
+{
+    stop_scrolling();
+    leave_gallery();
+    watch_depth_set_enabled(false);
+    watch_thumbs_set_enabled(true);
+    if(watch_nav_get_current() != screen_picker) watch_nav_open_picker();
+
+    /* Put the card in the middle */
+    lv_obj_t * card = lv_obj_get_child(carousel, face);
+    if(card) lv_obj_scroll_to_view(card, LV_ANIM_OFF);
+
+    watch_fx_set_live(stages[stage].mode == MODE_FX_LIVE);
+    fx_kind = kind;
+    fx_face = face;
+    if(fx_timer == NULL) fx_timer = lv_timer_create(fx_repeat_cb, 20, NULL);
+}
+
+static void stop_fx(void)
+{
+    fx_kind = FX_NONE;
+    watch_fx_set_live(false);
+}
+
+static void enter_fx_shatter_light(void)
+{
+    enter_fx(FX_SHATTER, FX_LIGHT_FACE);
+}
+
+static void enter_fx_shatter_heavy(void)
+{
+    enter_fx(FX_SHATTER, FX_HEAVY_FACE);
+}
+
+static void enter_fx_ripple(void)
+{
+    enter_fx(FX_RIPPLE, FX_HEAVY_FACE);
+}
+
+static void enter_fx_flip(void)
+{
+    enter_fx(FX_FLIP, FX_HEAVY_FACE);
+}
+
+static void enter_fx_reveal(void)
+{
+    enter_fx(FX_REVEAL, FX_HEAVY_FACE);
+}
+
+/* WATCH_BENCH=1 runs everything; any other value only the scenes whose name
+ * contains it, e.g. WATCH_BENCH=fx or WATCH_BENCH=shatter */
+static bool stage_selected(uint32_t i)
+{
+    const char * filter = getenv("WATCH_BENCH");
+    if(filter == NULL || filter[0] == '\0' || lv_strcmp(filter, "1") == 0) return true;
+    return strstr(stages[i].name, filter) != NULL;
+}
+
 static bool stage_enabled(uint32_t i)
 {
-    return stages[i].mode != MODE_SNAPSHOT || watch_thumbs_available();
+    if(!stage_selected(i)) return false;
+    if(stages[i].mode == MODE_SNAPSHOT) return watch_thumbs_available();
+    if(stages[i].mode == MODE_FX_SNAPSHOT || stages[i].mode == MODE_FX_LIVE) return watch_fx_available();
+    return true;
 }
 
 /**********************
@@ -301,7 +456,18 @@ static bool stage_enabled(uint32_t i)
 
 static const char * mode_name(bench_mode_t m)
 {
-    return m == MODE_LIVE ? "live" : m == MODE_SNAPSHOT ? "snapshot" : "-";
+    switch(m) {
+        case MODE_LIVE:
+            return "live";
+        case MODE_SNAPSHOT:
+            return "snapshot";
+        case MODE_FX_SNAPSHOT:
+            return "fx snap";
+        case MODE_FX_LIVE:
+            return "fx live";
+        default:
+            return "-";
+    }
 }
 
 /* sysmon's process CPU is a share of all CPUs; x CPU count = cores busy */
@@ -331,8 +497,9 @@ static void print_report(void)
            (int)lv_display_get_horizontal_resolution(disp), (int)lv_display_get_vertical_resolution(disp),
            LV_COLOR_DEPTH, cpu_cnt, (unsigned)lv_display_get_refr_timer(disp)->period);
     printf("[watch_bench]\n");
-    printf("[watch_bench] %-17s %-8s %5s %8s %14s %11s %13s %12s\n",
-           "scene", "mode", "FPS", "CPU (%)", "proc (cores)", "refr (ms)", "render (ms)", "flush (ms)");
+    printf("[watch_bench] %-17s %-8s %5s %8s %14s %11s %13s %12s %15s\n",
+           "scene", "mode", "FPS", "CPU (%)", "proc (cores)", "refr (ms)", "render (ms)", "flush (ms)",
+           "CPU/frame (ms)");
 
     for(uint32_t i = 0; i < STAGE_CNT; i++) {
         if(!ran[i]) continue;
@@ -340,13 +507,17 @@ static void print_report(void)
         char snaps[64], proc[24];
         snapshot_summary(&r->snap, snaps, sizeof(snaps));
         snprintf(proc, sizeof(proc), "%u%% (%.1f)", (unsigned)r->cpu_proc, proc_cores(r->cpu_proc));
-        printf("[watch_bench] %-17s %-8s %5u %8u %14s %11u %13u %12u\n",
+        printf("[watch_bench] %-17s %-8s %5u %8u %14s %11u %13u %12u %15.1f\n",
                stages[i].name, mode_name(stages[i].mode), (unsigned)r->fps, (unsigned)r->cpu, proc,
-               (unsigned)r->refr_ms, (unsigned)r->render_ms, (unsigned)r->flush_ms
-              );
+               (unsigned)r->refr_ms, (unsigned)r->render_ms, (unsigned)r->flush_ms,
+               r->cpu_per_frame_ms);
     }
 
-    /* Scrolling: live vs snapshot */
+    printf("[watch_bench]\n[watch_bench] fx work = time per animation step spent by the effect itself, outside the\n");
+    printf("[watch_bench] display render (fx live: incl. re-rendering the widget trees).\n");
+    printf("[watch_bench] CPU/frame = process CPU time (all threads) / display refresh cycles: render, effects,\n");
+    printf("[watch_bench] scrolling, layout and snapshot refreshes together, per refresh period (16.7 ms budget).\n");
+
     if(watch_thumbs_available()) {
         watch_thumbs_stats_t st;
         watch_thumbs_get_stats(&st);
@@ -364,16 +535,18 @@ static void write_csv(const char * path)
         return;
     }
     fprintf(f, "stage,mode,fps,cpu_pct,proc_cpu_pct,proc_cores,refr_ms,render_ms,flush_ms,max_render_ms,"
-            "snapshots,snapshot_avg_ms,snapshot_max_ms,rss_kb\n");
+            "snapshots,snapshot_avg_ms,snapshot_max_ms,rss_kb,fx_work_avg_ms,fx_work_max_ms,cpu_per_frame_ms\n");
     for(uint32_t i = 0; i < STAGE_CNT; i++) {
         if(!ran[i]) continue;
         const bench_result_t * r = &results[i];
-        fprintf(f, "%s,%s,%u,%u,%u,%.2f,%u,%u,%u,%u,%u,%u,%u,%u\n",
+        fprintf(f, "%s,%s,%u,%u,%u,%.2f,%u,%u,%u,%u,%u,%u,%u,%u,%.2f,%u,%.2f\n",
                 stages[i].name, mode_name(stages[i].mode), (unsigned)r->fps, (unsigned)r->cpu,
                 (unsigned)r->cpu_proc, proc_cores(r->cpu_proc), (unsigned)r->refr_ms, (unsigned)r->render_ms,
                 (unsigned)r->flush_ms, (unsigned)r->max_render_ms, (unsigned)r->snap.snapshot_cnt,
                 r->snap.snapshot_cnt ? (unsigned)(r->snap.snapshot_ms / r->snap.snapshot_cnt) : 0u,
-                (unsigned)r->snap.snapshot_max_ms, (unsigned)r->rss_kb);
+                (unsigned)r->snap.snapshot_max_ms, (unsigned)r->rss_kb,
+                r->fx.frames ? (double)r->fx.work_ms / r->fx.frames : 0.0, (unsigned)r->fx.work_max_ms,
+                r->cpu_per_frame_ms);
     }
     fclose(f);
     printf("[watch_bench] results written to %s\n", path);
@@ -385,6 +558,7 @@ static void write_csv(const char * path)
 
 static void next_stage(lv_timer_t * t)
 {
+    stop_fx();
     while(stage < STAGE_CNT && !stage_enabled(stage)) stage++;
     if(stage >= STAGE_CNT) {
         lv_timer_delete(t);
@@ -430,7 +604,7 @@ void watch_bench_start(void)
     }
     lv_subject_add_observer(disp->perf_sysmon_backend.subject, sysmon_observer_cb, NULL);
     static const lv_event_code_t render_events[] = {
-        LV_EVENT_RENDER_START, LV_EVENT_RENDER_READY,
+        LV_EVENT_RENDER_START, LV_EVENT_RENDER_READY, LV_EVENT_REFR_READY,
         LV_EVENT_FLUSH_START, LV_EVENT_FLUSH_FINISH,
         LV_EVENT_FLUSH_WAIT_START, LV_EVENT_FLUSH_WAIT_FINISH,
     };

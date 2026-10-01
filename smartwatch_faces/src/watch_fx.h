@@ -23,8 +23,25 @@ extern "C" {
 
 typedef void (*watch_fx_done_cb_t)(void * user_data);
 
+/** Work done in the effects' animation steps, outside the display render */
+typedef struct {
+    uint32_t frames;        /* animation steps */
+    uint32_t work_ms;       /* total time in them (live mode: incl. re-rendering the sources) */
+    uint32_t work_max_ms;   /* slowest step */
+} watch_fx_stats_t;
+
 /** Effects compiled in (LV_USE_SNAPSHOT) and not disabled with WATCH_FX=0 */
 bool watch_fx_enabled(void);
+
+/** The effects are compiled in (LV_USE_SNAPSHOT) */
+bool watch_fx_available(void);
+
+/** Re-render the effect sources every frame (see above) */
+void watch_fx_set_live(bool en);
+bool watch_fx_is_live(void);
+
+void watch_fx_get_stats(watch_fx_stats_t * stats);
+void watch_fx_reset_stats(void);
 
 /** An effect is playing; navigation should wait */
 bool watch_fx_busy(void);
