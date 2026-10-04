@@ -513,8 +513,6 @@ static void print_report(void)
                r->cpu_per_frame_ms);
     }
 
-    printf("[watch_bench]\n[watch_bench] fx work = time per animation step spent by the effect itself, outside the\n");
-    printf("[watch_bench] display render (fx live: incl. re-rendering the widget trees).\n");
     printf("[watch_bench] CPU/frame = process CPU time (all threads) / display refresh cycles: render, effects,\n");
     printf("[watch_bench] scrolling, layout and snapshot refreshes together, per refresh period (16.7 ms budget).\n");
 
